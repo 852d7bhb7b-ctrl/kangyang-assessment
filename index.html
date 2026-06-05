@@ -196,7 +196,7 @@ const qrSec=document.createElement('div');qrSec.className='sec';qrSec.innerHTML=
 
 
 (function(){const urlP=new URLSearchParams(window.location.search),hashP=new URLSearchParams((window.location.hash||'').replace('#',''));const preview=parseInt(urlP.get('preview'))||parseInt(hashP.get('preview'));if(preview&&preview>=1&&preview<=5){isPreview=true;document.getElementById('welcomePhase').classList.remove('on');document.getElementById('quizPhase').classList.remove('on');document.getElementById('loadPhase').classList.remove('on');Q.forEach(q=>{if(q.type==='opt'){const mx=(q.o||[]).length;const v=preview+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city='杭州';ans.gender=1;ans.age=2;ans.job=3;showResult();}else{renderQ();}
-window.startQuiz=function(){document.getElementById('welcomePhase').classList.remove('on');document.getElementById('quizPhase').classList.add('on');};
+window.startQuiz=function(){document.getElementById('welcomePhase').classList.remove('on');document.getElementById('quizPhase').classList.add('on');if(typeof renderQ==='function')renderQ();};
 const bar=document.createElement('div');bar.className='preview-bar';bar.innerHTML='<span>预览:</span>'+[1,2,3,4,5].map(l=>`<button onclick="isPreview=true;document.getElementById(\'quizPhase\').classList.remove(\'on\');document.getElementById(\'loadPhase\').classList.remove(\'on\');Q.forEach(q=>{if(q.type===\'opt\'){const mx=(q.o||[]).length;const v=`+l+`+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city=\'杭州\';ans.gender=1;ans.age=2;ans.job=3;showResult();">N${l}</button>`).join('');document.body.appendChild(bar);})();
 </script>
 </body>
