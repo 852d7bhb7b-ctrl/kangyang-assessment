@@ -8,19 +8,18 @@
 <meta http-equiv="Expires" content="0">
 <title>康养项目适配指数评估</title>
 <style>
-:root{--bg:#fafaf7;--card:#fff;--text:#2d2d2d;--sub:#8e8e8e;--green:#8cb89f;--gold:#d4a76a;--bar-bg:#ece9e2;--border:#e5e2db;}
+:root{--bg:#fafaf7;--card:#fff;--text:#2d2d2d;--sub:#8e8e8e;--green:#8cb89f;--gold:#d4a76a;--bar-bg:#ece9e2;--border:#e5e2db;--red:#e07b6c;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;}
 .app{width:100%;max-width:520px;background:var(--card);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,0.03),0 4px 16px rgba(0,0,0,0.04);overflow:hidden;}
 .phase{display:none;}.phase.on{display:block;animation:in 0.35s ease;}
 @keyframes in{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-
-.topbar{display:flex;align-items:center;gap:8px;padding:14px 20px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
-.topbar .step-num{font-size:12px;font-weight:700;color:var(--text);min-width:44px;}
-.topbar .bar-outer{flex:1;height:3px;background:var(--bar-bg);border-radius:2px;}
-.topbar .bar-inner{height:100%;border-radius:2px;background:var(--green);transition:width 0.35s;}
-.topbar .step-pct{font-size:12px;color:var(--sub);min-width:34px;text-align:right;}
-.quiz-body{padding:24px 24px 20px;min-height:360px;}
+.btn{flex:1;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:0.3px;transition:all 0.2s;text-align:center;}
+.btn-go{background:var(--green);color:#fff;}.btn-go:hover{background:#7aad8f;}
+.btn-back{background:transparent;color:var(--sub);font-size:13px;flex:0.4;}
+.btn-gold{background:var(--gold);color:#fff;}
+.btn-outline{background:transparent;border:1.5px solid var(--green);color:var(--green);}
+.quiz-body{padding:24px 24px 20px;min-height:200px;}
 .quiz-body .dim-tag{font-size:10px;font-weight:600;letter-spacing:2px;color:var(--green);margin-bottom:12px;}
 .quiz-body h2{font-size:22px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:6px;}
 .opts{display:flex;flex-direction:column;gap:7px;}
@@ -30,191 +29,443 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
 .opt.sel .r{border-color:var(--green);background:var(--green);}
 .opt.sel .r::after{content:"";width:6px;height:6px;border-radius:50%;background:#fff;}
 .opt .txt{flex:1;font-size:14px;color:var(--text);}
+.btn-row{display:flex;gap:8px;margin-top:18px;}
 .q-input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-family:inherit;color:var(--text);background:#fafaf7;outline:none;}
 .q-input:focus{border-color:var(--green);background:#fff;}
-.btn-row{display:flex;gap:8px;margin-top:18px;}
-.btn{flex:1;padding:13px;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:0.3px;transition:all 0.2s;text-align:center;}
-.btn-go{background:var(--green);color:#fff;}.btn-go:hover{background:#7aad8f;}
-.btn-back{background:transparent;color:var(--sub);font-size:13px;flex:0.4;}
 
+/* 结果+锁样式 */
+.lock-hero{text-align:center;padding:36px 24px 24px;}
+.lock-hero .char-icon{font-size:64px;margin-bottom:12px;}
+.lock-hero .r-name{font-size:26px;font-weight:700;color:var(--text);margin-top:6px;}
+.lock-hero .r-sub{font-size:13px;color:var(--sub);margin-top:4px;}
+.lock-sec{padding:16px 24px;margin-bottom:4px;}
+.lock-sec h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.lock-sec .locked-content{position:relative;background:var(--bar-bg);border-radius:12px;padding:16px;text-align:center;}
+.lock-sec .locked-content .blur-hint{font-size:12px;color:var(--sub);margin-top:4px;}
+
+/* 付费解锁页 */
+.pay-hero{text-align:center;padding:32px 24px 20px;}
+.pay-hero h2{font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pay-hero .price{font-size:48px;font-weight:800;color:var(--red);margin:16px 0;}
+.pay-hero .price small{font-size:20px;}
+.pay-box{background:#fffbe6;border:2px dashed var(--gold);border-radius:16px;padding:20px;margin:16px 24px;text-align:center;}
+.pay-box img{width:200px;height:200px;border-radius:12px;margin:10px auto;display:block;object-fit:contain;}
+.pay-box .pay-steps{font-size:12px;color:var(--sub);line-height:2;text-align:left;padding:0 16px;}
+.pay-box .code-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-family:inherit;text-align:center;outline:none;margin:10px 0;}
+.pay-box .code-input:focus{border-color:var(--green);}
+.pay-hint{font-size:11px;color:var(--sub);text-align:center;padding:0 24px 20px;}
+
+/* 完整版结果(解锁后) */
+.full-hero{padding:28px 24px 16px;text-align:center;}
+.full-hero img{width:180px;height:auto;border-radius:16px;display:block;margin:0 auto 10px;object-fit:contain;}
+.full-hero .r-name{font-size:26px;font-weight:700;color:var(--text);}
+.full-hero .r-subtitle{font-size:13px;color:var(--sub);}
+.sec{padding:16px 24px;margin-bottom:4px;}
+.sec h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.sec p{font-size:13px;color:var(--text);line-height:1.85;}
+
+/* 加载动画 */
 .loading{text-align:center;padding:80px 24px;}.loading .spinner{width:32px;height:32px;margin:0 auto 20px;border:2.5px solid var(--bar-bg);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}.loading p{font-size:13px;color:var(--sub);}
 
-.preview-back{display:flex;align-items:center;gap:4px;padding:12px 20px;font-size:12px;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);}.preview-back:hover{color:var(--text);}
-.r-hero{padding:36px 24px 24px;text-align:center;}.r-hero .char-svg{margin-bottom:18px;}.r-hero .char-svg img{display:block;margin:0 auto;width:220px;height:auto;border-radius:16px;object-fit:contain;}
-.r-hero .r-name{font-size:28px;font-weight:700;color:var(--text);margin-top:6px;letter-spacing:0.5px;}.r-hero .r-subtitle{font-size:13px;color:var(--sub);margin-top:3px;}.r-hero .r-badges{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px;}
-.r-badge{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.5px;}.r-badge.green{background:#edf6f0;color:#4a7a5e;}.r-badge.blue{background:#eaf2f7;color:#4a6d82;}.r-badge.gold{background:#faf4e8;color:#8a6d2e;}.r-badge.purple{background:#f2edf7;color:#6b5280;}
-
-.sec{padding:20px 24px;margin-bottom:4px;}.sec h3{display:block;font-size:18px;font-weight:700;color:var(--text);letter-spacing:0.5px;margin-bottom:14px;padding:8px 14px;background:var(--bar-bg);border-radius:6px;}.sec p{font-size:13px;color:var(--text);line-height:1.85;}
-
-.dim-float{font-size:18px;font-weight:700;text-align:center;margin-bottom:2px;}
-.dim-left{font-size:13px;font-weight:700;color:var(--text);text-align:right;line-height:1.3;}
-.dim-right{font-size:13px;font-weight:700;color:var(--text);text-align:left;line-height:1.3;}
-.dim-sub{font-size:10px;color:var(--sub);}
-.dim-bar-wrap{flex:1;height:22px;background:var(--bar-bg);border-radius:11px;overflow:hidden;position:relative;}
-.dim-bar-wrap .dfill{height:100%;border-radius:11px;position:absolute;left:0;top:0;transition:width 1.2s cubic-bezier(0.22,1,0.36,1);}
-.dfill.c1{background:#cc6b6b;}.dfill.c2{background:#bdb04d;}.dfill.c3{background:#5cb85c;}.dfill.c4{background:#4dabab;}.dfill.c5{background:#5c5ccc;}.dfill.c6{background:#b84db8;}
-
-.trait-item{margin-bottom:16px;}.trait-item .trait-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;}.trait-item .trait-desc{font-size:12px;color:var(--sub);line-height:1.65;}
-.fit-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}.fit-tag{padding:5px 12px;border-radius:8px;font-size:11px;font-weight:500;background:#edf6f0;color:#4a7a5e;}.fit-tag.locked{background:var(--bar-bg);color:#bbb;}.lock-hint{font-size:11px;color:var(--sub);margin-top:10px;text-align:center;}
-
-.cta-sec{padding:20px 24px 24px;border-top:1px solid var(--border);}.cta-sec .ct{text-align:center;font-size:11px;color:var(--sub);margin-bottom:10px;letter-spacing:1px;}.cta-sec .er{display:flex;gap:6px;margin-bottom:8px;}.cta-sec .er input{flex:1;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-family:inherit;outline:none;}.cta-sec .er input:focus{border-color:var(--green);}.cta-sec .er button{padding:11px 14px;background:var(--green);color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;}
-.cta-btns{display:flex;flex-direction:column;gap:6px;}.cta-btn{padding:12px;font-size:13px;border-radius:12px;font-weight:600;cursor:pointer;font-family:inherit;text-align:center;border:none;transition:all 0.2s;}.cta-gold{background:var(--gold);color:#fff;}.cta-outline{background:transparent;border:1.5px solid var(--green);color:var(--green);}.cta-dark{background:var(--text);color:#fff;}
-
-.qr-bot{text-align:center;padding:0 24px 24px;}.qr-bot img{width:240px;height:auto;border-radius:14px;display:block;margin:0 auto 10px;object-fit:contain;}.qr-bot p{font-size:13px;color:var(--sub);}
-
-.dim-modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.35);z-index:10000;display:flex;align-items:center;justify-content:center;animation:in 0.2s ease;}
-.dim-modal{background:#fff;margin:20px;padding:24px;border-radius:16px;max-width:400px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.15);}
-.dim-modal .dm-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:12px;}.dim-modal .dm-desc{font-size:12px;color:var(--sub);line-height:1.75;margin-bottom:10px;}.dim-modal .dm-tip{font-size:12px;color:var(--green);font-weight:600;margin-bottom:16px;}.dim-modal .dm-close{display:block;width:100%;padding:12px;border:none;border-radius:10px;background:var(--green);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
-
-.preview-bar{position:fixed;bottom:14px;right:14px;z-index:9999;display:flex;align-items:center;gap:5px;background:#fff;padding:7px 10px;border-radius:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);font-size:10px;}.preview-bar span{color:var(--sub);}.preview-bar button{padding:4px 10px;border:1px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;font-size:10px;font-family:inherit;font-weight:600;color:var(--text);}.preview-bar button:hover{background:var(--green);color:#fff;border-color:var(--green);}
-
 @media(max-width:480px){.app{border-radius:0;}}
-@media print{body{background:#fff;padding:0;}.app{box-shadow:none;max-width:100%;}.cta-sec,.qr-bot,.btn,.preview-bar,.preview-back{display:none!important;}}
 </style>
 </head>
 <body>
 <div class="app">
+
+<!-- 1. 欢迎页 -->
 <div class="phase on" id="welcomePhase" style="text-align:center;padding:60px 24px 50px;">
-    <div style="font-size:52px;margin-bottom:16px;">🏥</div>
-    <div style="font-size:28px;font-weight:800;color:var(--text);letter-spacing:1px;margin-bottom:8px;">康养项目适配指数评估</div>
-    <div style="font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:28px;">3 分钟 · 50 道题 · 六维分析<br>发现你的康养创业者类型<br>获取专属《康养项目可行性报告》</div>
-    <button class="btn btn-go" onclick="startQuiz()" style="max-width:260px;margin:0 auto;font-size:17px;padding:16px;">开始免费评估 →</button>
-    <div style="margin-top:32px;font-size:11px;color:var(--light);">已有 10,000+ 康养创业者完成测评<br><span style="font-size:10px;color:#ccc;">v2.3</span></div>
+  <div style="font-size:52px;margin-bottom:16px;">🏥</div>
+  <div style="font-size:28px;font-weight:800;color:var(--text);letter-spacing:1px;margin-bottom:8px;">康养项目适配指数评估</div>
+  <div style="font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:28px;">6 道核心题 · 30 秒完成<br>快速发现你的康养创业者类型<br>解锁完整报告仅需 ¥5</div>
+  <button class="btn btn-go" onclick="startQuiz()" style="max-width:260px;margin:0 auto;font-size:17px;padding:16px;">开始免费评估 →</button>
+  <div style="margin-top:32px;font-size:11px;color:var(--light);">已有 10,000+ 康养创业者完成测评</div>
 </div>
-<div class="phase" id="quizPhase"><div class="topbar"><span class="step-num" id="stepNum">1/50</span><div class="bar-outer"><div class="bar-inner" id="stepBar" style="width:0%"></div></div><span class="step-pct" id="stepPct">0%</span></div><div class="quiz-body" id="quizBody"></div></div>
+
+<!-- 2. 精简答题 -->
+<div class="phase" id="quizPhase">
+  <div class="quiz-body" id="quizBody"></div>
+</div>
+
+<!-- 3. 加载 -->
 <div class="phase" id="loadPhase"><div class="loading"><div class="spinner"></div><p id="loadText">正在分析...</p></div></div>
+
+<!-- 4. 精简结果 + 锁 -->
 <div class="phase result" id="resPhase">
-<div class="preview-back" id="previewBack" style="display:none" onclick="exitPreview()">← 返回答题</div>
-<div class="r-hero"><div class="char-svg" id="charSvg"></div><div class="r-name" id="rName"></div><div class="r-subtitle" id="rSubtitle"></div><div class="r-badges" id="rBadges"></div></div>
-<div class="sec"><h3>1. 人物特征</h3><p id="rTrait"></p></div>
-<div class="sec"><h3>2. 创业数据分析</h3><p style="font-size:12px;color:var(--sub);margin-bottom:18px;">六个维度，每个都有两面性——你的"短板"背后，往往藏着独特的竞争优势。</p><div id="dimBars"></div></div>
-<div class="sec"><h3>3. 你的强项</h3><div id="rStr"></div></div>
-	<div class="sec"><h3>4. 你的短板</h3><div id="rWarn"></div></div>
-<div class="sec"><h3>5. 适合你的创业风格</h3><p id="rStyle"></p></div>
-<div class="sec"><h3>6. 你的创业成长</h3><p id="rGrowth"></p></div>
-<div class="sec"><h3>7. 你的商业关系</h3><p id="rRelation"></p></div>
-<div class="sec"><h3>8. 适合你的康养发展道路</h3><p id="rPath"></p></div>
-<div class="sec"><h3>9. 你可能会喜欢的康养项目</h3><div class="fit-tags" id="rProjects"></div><div class="lock-hint">🔒 完整项目匹配报告请发送邮箱解锁</div></div>
-<div class="sec" style="text-align:center;"><div class="cta-btns"><button class="cta-btn cta-gold" onclick="showFormPopup()" style="width:100%;">点击领取完整测算结果</button><button class="cta-btn cta-outline" onclick="alert('已收到预约！')" style="width:100%;">预约顾问 1v1 测算</button><button class="cta-btn cta-dark" onclick="window.print()" style="width:100%;">导出 PDF 报告</button></div></div>
-<div class="qr-bot"><img src="qrcode.png" alt="扫码关注"><p>扫码关注 · 获取康养行业洞察</p></div>
+  <div class="lock-hero">
+    <div class="char-icon" id="charIcon"></div>
+    <div class="r-name" id="rName"></div>
+    <div class="r-sub" id="rSub"></div>
+  </div>
+  <div class="lock-sec"><h3>🔍 你的创业类型</h3><p id="rStyle"></p></div>
+  <div class="lock-sec">
+    <h3>🔒 完整六维分析报告</h3>
+    <div class="locked-content">
+      <p style="font-size:13px;color:var(--text);margin-bottom:6px;">📊 投资力 · 资源力 · 运营力 · 执行力 · 市场力 · 创新力</p>
+      <p style="font-size:13px;color:var(--text);margin-bottom:6px;">🎯 强项分析 · 短板诊断 · 发展道路</p>
+      <p style="font-size:13px;color:var(--text);">🏆 专属康养项目匹配推荐</p>
+      <p class="blur-hint">支付 ¥5 即可解锁完整 50 题深度报告</p>
+    </div>
+  </div>
+  <div style="text-align:center;padding:20px 24px;">
+    <button class="btn btn-gold" onclick="showPayPage()" style="width:100%;font-size:17px;padding:16px;">💰 ¥5 解锁完整报告</button>
+  </div>
 </div>
+
+<!-- 5. 付费解锁页 -->
+<div class="phase" id="payPhase">
+  <div class="pay-hero">
+    <div style="font-size:48px;">🔑</div>
+    <h2>解锁完整评估报告</h2>
+    <div class="price"><small>¥</small>5</div>
+    <p style="font-size:13px;color:var(--sub);">解锁后含：50题深度评估 · 六维分析 · 项目匹配</p>
+  </div>
+  <div class="pay-box">
+    <p style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;">📱 扫码支付 ¥5</p>
+    <img src="pay-qr.png" alt="付款码" onerror="this.outerHTML='<div style=width:200px;height:200px;background:var(--bar-bg);border-radius:12px;margin:10px auto;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--sub);>付款码<br>pay-qr.png</div>'">
+    <div class="pay-steps">
+      <p>1. 截图保存付款码</p>
+      <p>2. 微信扫码支付 ¥5</p>
+      <p>3. 支付完成后，联系客服获取解锁码</p>
+      <p>4. 在下方输入解锁码</p>
+    </div>
+    <input class="code-input" id="unlockCode" placeholder="请输入8位解锁码" maxlength="8" autocomplete="off">
+    <button class="btn btn-go" onclick="unlockFull()" style="width:100%;margin-top:8px;">🔓 解锁完整版</button>
+    <p style="font-size:10px;color:var(--sub);margin-top:6px;">客服微信：请扫描付款码添加</p>
+  </div>
 </div>
+
+<!-- 6. 完整版结果(解锁后) -->
+<div class="phase result" id="fullPhase">
+  <div class="full-hero">
+    <img id="fullAvatar" src="" alt="avatar">
+    <div class="r-name" id="fullName"></div>
+    <div class="r-subtitle" id="fullSub"></div>
+  </div>
+  <div class="sec"><h3>1. 人物特征</h3><p id="fullTrait"></p></div>
+  <div class="sec"><h3>2. 创业数据分析</h3><div id="fullDimBars"></div></div>
+  <div class="sec"><h3>3. 你的强项</h3><div id="fullStr"></div></div>
+  <div class="sec"><h3>4. 你的短板</h3><div id="fullWarn"></div></div>
+  <div class="sec"><h3>5. 适合你的创业风格</h3><p id="fullStyle"></p></div>
+  <div class="sec"><h3>6. 你的创业成长</h3><p id="fullGrowth"></p></div>
+  <div class="sec"><h3>7. 你的商业关系</h3><p id="fullRelation"></p></div>
+  <div class="sec"><h3>8. 适合你的发展道路</h3><p id="fullPath"></p></div>
+  <div class="sec"><h3>9. 推荐康养项目</h3><div class="fit-tags" id="fullProjects"></div></div>
+  <div style="text-align:center;padding:24px;">
+    <button class="btn btn-outline" onclick="window.print()" style="width:100%;">🖨 导出 PDF 报告</button>
+  </div>
+</div>
+
+</div>
+
 <script>
+// ========== 解锁码系统 ==========
+// 管理员可在下面添加/修改解锁码
+// 每个码只能用一次(存储在localStorage中)
+var VALID_CODES = ['KANGYANG1','TEST8888','DEMO2026','YANGSH01','YANGSH02','YANGSH03'];
+
+function isUnlocked(){
+  return localStorage.getItem('kangyang_unlocked')==='true';
+}
+function setUnlocked(){
+  localStorage.setItem('kangyang_unlocked','true');
+}
+
+// ========== 精简版题目(6题) ==========
+var Q_LITE = [
+  {t:"你的性别是？",id:"gender",o:["男","女"]},
+  {t:"可投入的启动资金规模？",id:"iv1",o:["10万以下","10-30万","30-80万","80-200万","200万以上"]},
+  {t:"行业从业年限？",id:"op1",o:["零经验跨界","1年以下","1-3年","3-5年","5年以上"]},
+  {t:"可用场地总面积？",id:"ex1",o:["暂无场地","100㎡以下","100-300㎡","300-800㎡","800-2000㎡","2000㎡以上"]},
+  {t:"本地竞品了解程度？",id:"mk2",o:["完全不了解","知道有几家竞品","了解主要内容和价格","系统分析过优劣势","持续追踪有应对策略"]},
+  {t:"服务模式创新程度？",id:"in1",o:["复制现有模式","小幅调整","有创新核心不变","模式明显创新","完全独创服务模式"]}
+];
+var TOTAL_LITE=Q_LITE.length, ans_lite={}, qi_lite=0;
+
+// ========== 精简版结果文案(快照) ==========
+var LITE_TRAITS = {
+  1:'你是一位"潜力探索者"。带着跨界而来的新鲜视角，你对康养行业充满好奇和学习热情。虽然行业经验尚浅，但你的灵活性和低成本试错能力是你最大的武器。建议从轻资产、小规模的社区康养服务起步。',
+  2:'你是一位"稳健筑基者"。务实、可靠、注重品质——在康养这个"慢行业"中，你的稳扎稳打恰恰是最稀缺的品质。你已经在一个小范围内证明了自己，下一步需要的是适度扩大视野和资源网络。',
+  3:'你是一位"区域运营家"。既有扎实的行业根基，又有规模化扩张的野心和能力。你擅长搭建系统、带领团队，正从"优秀的个人"向"优秀的领导者"转型。核心挑战在于扩张中的品质一致性。',
+  4:'你是一位"增长加速者"。你有想法、有执行力、有品牌意识——在康养行业中是一匹不容忽视的快马。你的加速度是最大优势，但也需要警惕跑得太快导致品质下滑。学会在速度与品质间找平衡。',
+  5:'你是一位"产业操盘手"。你的视野超越了单店盈亏，你看到的是产业链和生态圈。你不仅在做一门生意，更在定义一个行业的走向。最大的挑战是保持组织创新活力，避免位高权重后的信息茧房。'
+};
+
+// ========== 渲染精简版题目 ==========
+function renderQLite(){
+  if(qi_lite>=TOTAL_LITE){finishLite();return;}
+  var q=Q_LITE[qi_lite];
+  var cv=ans_lite[q.id];
+  document.getElementById('quizBody').innerHTML=
+    '<div class="dim-tag">问题 '+(qi_lite+1)+'/'+TOTAL_LITE+'</div>'+
+    '<h2>'+q.t+'</h2>'+
+    '<div class="opts">'+q.o.map(function(o,i){
+      var v=i+1;
+      return '<div class="opt'+(cv===v?' sel':'')+'" data-v="'+v+'" onclick="selOptLite(this)"><span class="r"></span><span class="txt">'+o+'</span></div>';
+    }).join('')+'</div>'+
+    '<div class="btn-row">'+
+      (qi_lite>0?'<button class="btn btn-back" onclick="prevQLite()">← 返回</button>':'')+
+      '<button class="btn btn-go" onclick="nextQLite()">'+(qi_lite===TOTAL_LITE-1?'完成，看结果':'下一题')+'</button>'+
+    '</div>';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function selOptLite(el){
+  el.parentElement.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  ans_lite[Q_LITE[qi_lite].id]=parseInt(el.dataset.v);
+}
+function nextQLite(){
+  if(!ans_lite[Q_LITE[qi_lite].id]){alert('请选择一个选项');return;}
+  qi_lite++;
+  renderQLite();
+}
+function prevQLite(){
+  if(qi_lite>0){qi_lite--;renderQLite();}
+}
+
+// ========== 精简版算分 ==========
+function calcLiteLevel(){
+  var gender=ans_lite.gender||1;
+  // 计算综合得分(每道题归一化)
+  var scores=[];
+  for(var i=0;i<Q_LITE.length;i++){
+    var q=Q_LITE[i];
+    var v=ans_lite[q.id]||0;
+    var mx=q.o.length;
+    scores.push(v/mx*100);
+  }
+  var total=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
+  var level;
+  if(total<25)level=1;
+  else if(total<44)level=2;
+  else if(total<62)level=3;
+  else if(total<82)level=4;
+  else level=5;
+  var names=['潜力探索者','稳健筑基者','区域运营家','增长加速者','产业操盘手'];
+  var styles=['探索学习者','稳健工匠','系统构建者','增长黑客','产业定义者'];
+  return {level:level,name:names[level-1],style:styles[level-1],score:total,gender:gender};
+}
+
+function finishLite(){
+  document.getElementById('quizPhase').classList.remove('on');
+  document.getElementById('loadPhase').classList.add('on');
+  var el=document.getElementById('loadText'),i=0;
+  var texts=['正在分析...','报告已生成'];
+  var t=setInterval(function(){if(i<texts.length){el.textContent=texts[i];i++;}},500);
+  setTimeout(function(){
+    clearInterval(t);
+    document.getElementById('loadPhase').classList.remove('on');
+    showLiteResult();
+  },2000);
+}
+
+function showLiteResult(){
+  var r=calcLiteLevel();
+  var icons=['🌱','🏠','🏢','🚀','👑'];
+  document.getElementById('charIcon').textContent=icons[r.level-1];
+  document.getElementById('rName').textContent=r.name;
+  document.getElementById('rSub').textContent='综合评分：'+r.score+'分';
+  document.getElementById('rStyle').textContent='你属于"'+r.style+'"型创业者。'+LITE_TRAITS[r.level];
+  document.getElementById('resPhase').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ========== 支付/解锁 ==========
+function showPayPage(){
+  document.getElementById('resPhase').classList.remove('on');
+  document.getElementById('payPhase').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function unlockFull(){
+  var code=document.getElementById('unlockCode').value.trim().toUpperCase();
+  if(!code){alert('请输入解锁码');return;}
+  var used=JSON.parse(localStorage.getItem('kangyang_used_codes')||'[]');
+  if(VALID_CODES.indexOf(code)===-1){
+    if(used.indexOf(code)!==-1){
+      alert('此解锁码已被使用');
+    }else{
+      alert('解锁码无效，请检查后重试');
+    }
+    return;
+  }
+  if(used.indexOf(code)!==-1){
+    alert('此解锁码已被使用');
+    return;
+  }
+  used.push(code);
+  localStorage.setItem('kangyang_used_codes',JSON.stringify(used));
+  setUnlocked();
+  document.getElementById('payPhase').classList.remove('on');
+  // 跳转到完整版答题
+  loadFullQuiz();
+}
+
+// ========== 完整版(50题) — 从原系统移植 ==========
+var Q_FULL, TOTAL_FULL, ans_full={}, qi_full=0;
+
+function loadFullQuiz(){
+  if(typeof Q_FULL==='undefined'){
+    // 内嵌完整版题目定义
+    Q_FULL=[{d:0,t:"你计划在哪个城市开展项目？",type:"input",id:"city"},{d:0,t:"你的性别是？",type:"opt",id:"gender",o:["男","女"]},{d:0,t:"你的年龄段是？",type:"opt",id:"age",o:["25岁以下","25-35岁","36-45岁","46-55岁","55岁以上"]},{d:0,t:"你目前的职业状态？",type:"opt",id:"job",o:["在职想转行康养","已在康养行业","企业主/投资人","退休/半退休"]},{d:1,t:"可投入的启动资金规模？",type:"opt",id:"iv1",o:["10万以下","10-30万","30-80万","80-200万","200万以上"]},{d:1,t:"资金来源构成？",type:"opt",id:"iv2",o:["全部自有","自有+亲友借款","自有+银行贷款","合伙人出资","机构/投资人出资"]},{d:1,t:"半年内能否追加投资？",type:"opt",id:"iv3",o:["无法追加","可追加<10万","可追加10-50万","可追加50-100万","可追加>100万"]},{d:1,t:"投资回报周期预期？",type:"opt",id:"iv4",o:["6个月内","6-12个月","1-2年","2-3年","3年以上"]},{d:1,t:"应急周转金储备？",type:"opt",id:"iv5",o:["没有预留","1-3个月成本","3-6个月成本","6-12个月成本","12个月以上"]},{d:1,t:"项目财务负责人？",type:"opt",id:"iv6",o:["自己无财务背景","自己有财务背景","兼职财务","专职财务","财务团队/外包"]},{d:1,t:"对盈利模式的理解？",type:"opt",id:"iv7",o:["不太清楚","了解基本来源","研究过财务模型","有详细测算","有验证的盈利模型"]},{d:1,t:"其他可投资金情况？",type:"opt",id:"iv8",o:["几乎没有","少量储蓄","有其他投资收益","较充裕资金池","充足多渠道资金"]},{d:2,t:"社区/街道关系？",type:"opt",id:"rs1",o:["完全不了解","认识个别人员","与部分社区关系好","多社区深度合作","街道/区级资源"]},{d:2,t:"医疗健康领域资源？",type:"opt",id:"rs2",o:["暂无医疗资源","认识个别医护","与诊所社区医院有联系","与二级以上医院合作","自有医疗团队/深度网络"]},{d:2,t:"民政/卫健政策了解？",type:"opt",id:"rs3",o:["完全不了解","听说过一些","主动关注动态","熟悉且有信息渠道","有政府关系"]},{d:2,t:"行业人脉积累？",type:"opt",id:"rs4",o:["几乎没有人脉","有几个认识同行","有稳定交流圈子","本地圈内有一定影响力","广泛深度人脉网络"]},{d:2,t:"设备/物料供应链？",type:"opt",id:"rs5",o:["需从零找","知道供应商未联系","已初步接触","有几家稳定供应商","成熟供应链有议价力"]},{d:2,t:"技术/信息化资源？",type:"opt",id:"rs6",o:["没有技术背景","有基本信息化意识","有可用技术合作方","有专业技术团队","自主研发/深度整合"]},{d:2,t:"已有/能快速获取的客户？",type:"opt",id:"rs7",o:["零客户基础","少量意向咨询者","有稳定潜在客户渠道","已有签约/预付费客户","成熟客户池+转介绍"]},{d:2,t:"保险/长护险/医保对接？",type:"opt",id:"rs8",o:["不了解这些渠道","了解但未对接","正在了解对接流程","已与部分支付方建立联系","已打通多种支付渠道"]},{d:2,t:"人才招聘培训资源？",type:"opt",id:"rs9",o:["不知哪里招人","知道一些招聘渠道","有合作招聘渠道","有稳定人才供给管道","完善招聘+培训体系"]},{d:2,t:"除核心场地外物业资源？",type:"opt",id:"rs10",o:["只有核心场地","有少量可选物业信息","认识物业中介/房东","有多个可选物业","自有物业/稳定合作网络"]},{d:3,t:"行业从业年限？",type:"opt",id:"op1",o:["零经验跨界","1年以下","1-3年","3-5年","5年以上"]},{d:3,t:"团队管理经验？",type:"opt",id:"op2",o:["没有管理经验","管理过1-3人","管理过4-10人","管理过10-50人","管理过50人以上"]},{d:3,t:"核心团队人数？",type:"opt",id:"op3",o:["只有我自己","1-2人","3-5人","6-15人","15人以上"]},{d:3,t:"运营标准化(SOP)？",type:"opt",id:"op4",o:["没有SOP概念","有零散流程文档","有基础运营手册","有较完整定期更新SOP","成熟SOP体系可输出"]},{d:3,t:"服务质量管控？",type:"opt",id:"op5",o:["暂无质量管控概念","有基本服务要求","有简单检查反馈机制","有系统质量管理体系","完整数据驱动质量管控"]},{d:3,t:"员工培训考核？",type:"opt",id:"op6",o:["没有培训计划","有简单入职培训","有定期内部培训","系统培训+考核+晋升","完善培训学院/外部合作"]},{d:3,t:"应急事件处理？",type:"opt",id:"op7",o:["没想过这些问题","有一些基本意识","有简单应急预案","详细预案且定期演练","专业应急团队+风控体系"]},{d:3,t:"证照合规资质？",type:"opt",id:"op8",o:["尚未了解","了解但未办理","部分证照已取得","主要证照齐全","齐全且持续关注政策变化"]},{d:3,t:"数字化/信息化系统？",type:"opt",id:"op9",o:["不打算用信息化","有使用意愿未选型","正在搭建基础系统","已有部分系统运行","全面数字化数据驱动"]},{d:3,t:"运营成本控制？",type:"opt",id:"op10",o:["没有成本控制概念","有基本记账预算","定期分析成本优化","系统成本管控降本","精细化成本管理领先"]},{d:4,t:"可用场地总面积？",type:"opt",id:"ex1",o:["暂无场地","100㎡以下","100-300㎡","300-800㎡","800-2000㎡","2000㎡以上"]},{d:4,t:"场地性质？",type:"opt",id:"ex2",o:["尚未确定","自有住宅/改造","租赁商业用房","医疗/养老专项用地","酒店/度假村/综合体"]},{d:4,t:"场地位置？",type:"opt",id:"ex3",o:["尚未选址","郊区/新开发区域","城市非核心区","城市次中心","城市核心区/优质地段"]},{d:4,t:"装修/改造进度？",type:"opt",id:"ex4",o:["尚未开始","方案设计中","施工进行中","硬装完成软装中","已全部完成可用"]},{d:4,t:"证照办理进度？",type:"opt",id:"ex5",o:["尚未开始了解","正在了解所需证照","材料准备中","部分已提交审批","证照齐全"]},{d:4,t:"计划启动时间？",type:"opt",id:"ex6",o:["尚无明确时间表","1年以后","6-12个月内","3-6个月内","1-3个月内","已启动运营"]},{d:4,t:"合作方确定程度？",type:"opt",id:"ex7",o:["无合作方","正在寻找合作方","已有意向合作方","合作方基本确定","已签约开始协作"]},{d:4,t:"设备/设施采购？",type:"opt",id:"ex8",o:["尚未开始","已完成需求清单","正在选型比价","部分已采购到位","全部到位可用"]},{d:4,t:"试运营/接待能力？",type:"opt",id:"ex9",o:["完全没有","计划3个月后","1-2个月后","即将具备(1月内)","已具备可随时接待"]},{d:5,t:"目标市场调研？",type:"opt",id:"mk1",o:["没做过调研","凭感觉日常观察","做过简单市场了解","有系统市场调研","有专业第三方调研报告"]},{d:5,t:"本地竞品了解？",type:"opt",id:"mk2",o:["完全不了解","知道有几家竞品","了解主要内容和价格","系统分析过优劣势","持续追踪有应对策略"]},{d:5,t:"定价策略清晰度？",type:"opt",id:"mk3",o:["还没想过定价","有大致的价格范围","参考竞品定初步价格","有明确定价策略依据","动态定价模型可调"]},{d:5,t:"获客渠道储备？",type:"opt",id:"mk4",o:["没有获客计划","有计划未开始","已有1-2个渠道","多渠道获客初步搭建","获客体系成熟成本可控"]},{d:5,t:"品牌/命名准备？",type:"opt",id:"mk5",o:["还没有品牌概念","有初步的想法","品牌名称定位已定","品牌VI系统已完成","品牌已有一定知名度"]},{d:5,t:"营销推广预算？",type:"opt",id:"mk6",o:["没有营销预算","少量预算(月<1000)","月1000-5000元","月5000-20000元","月20000元以上"]},{d:5,t:"客户关系管理(CRM)？",type:"opt",id:"mk7",o:["没有CRM概念","有基本客户记录","有简单CRM工具","有系统客户管理体系","数据驱动客户运营"]},{d:5,t:"口碑/转介绍机制？",type:"opt",id:"mk8",o:["没有转介绍机制","靠自然口碑传播","有激励转介绍方案","有成熟口碑裂变体系","口碑是主要获客来源"]},{d:5,t:"服务差异化优势？",type:"opt",id:"mk9",o:["和竞品差不多","有一两个小亮点","有明显差异化服务","差异化突出有壁垒","独一无二难以复制"]},{d:5,t:"线上运营能力？",type:"opt",id:"mk10",o:["不做线上","偶尔发朋友圈","有运营1个平台","多平台有规划运营","专业内容团队效果好"]},{d:6,t:"服务模式创新程度？",type:"opt",id:"in1",o:["复制现有模式","小幅调整","有创新核心不变","模式明显创新","完全独创服务模式"]},{d:6,t:"科技/智能设备应用？",type:"opt",id:"in2",o:["不打算用科技","用一些基础设备","愿意尝试智能设备","计划系统化引入","科技驱动核心竞争力"]},{d:6,t:"跨界整合能力？",type:"opt",id:"in3",o:["不考虑跨界","有想法未落地","探索1-2个方向","有明确跨界整合方案","跨界融合核心模式"]},{d:6,t:"数据驱动意愿/能力？",type:"opt",id:"in4",o:["不打算用数据","会简单记录数据","定期分析优化运营","有分析系统专职人员","数据核心资产驱动"]},{d:6,t:"行业前沿趋势关注？",type:"opt",id:"in5",o:["不太关注","偶尔看到相关新闻","定期查阅行业信息","系统性追踪行业趋势","深度参与研讨有前瞻"]},{d:6,t:"会员/订阅等新模式？",type:"opt",id:"in6",o:["只做传统按次收费","考虑过不确定","正在设计会员体系","有完整会员/订阅方案","多种创新模式组合"]},{d:6,t:"适老化设计重视？",type:"opt",id:"in7",o:["没想过适老化","大概知道一些要求","按规范做适老化","请专业团队设计","体验是核心竞争力"]},{d:6,t:"连锁/加盟/托管？",type:"opt",id:"in8",o:["只做单店","未来可能考虑","有初步扩张设想","有明确扩张计划模型","扩张模型已设计完成"]}];
+    TOTAL_FULL=Q_FULL.length;
+  }
+  document.getElementById('quizPhase').classList.add('on');
+  qi_full=0;ans_full={};
+  renderQFull();
+}
+
+function renderQFull(){
+  if(qi_full>=TOTAL_FULL){finishFull();return;}
+  var q=Q_FULL[qi_full],pct=Math.round(qi_full/TOTAL_FULL*100);
+  var dims=['','投资力','资源力','运营力','执行力','市场力','创新力'],dt=q.d===0?'基础信息':dims[q.d];
+  if(q.type==='input'){
+    document.getElementById('quizBody').innerHTML=
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><span style="font-size:12px;font-weight:700;">'+(qi_full+1)+'/'+TOTAL_FULL+'</span><div style="flex:1;height:3px;background:var(--bar-bg);border-radius:2px;"><div style="height:100%;border-radius:2px;background:var(--green);width:'+pct+'%;"></div></div><span style="font-size:12px;color:var(--sub);">'+pct+'%</span></div>'+
+      '<div class="dim-tag">'+dt+'</div><h2>'+q.t+'</h2>'+
+      '<input class="q-input" id="inp" placeholder="请输入城市名称" value="'+(ans_full[q.id]||'')+'">'+
+      '<div class="btn-row">'+
+        (qi_full>0?'<button class="btn btn-back" onclick="prevQFull()">← 返回</button>':'')+
+        '<button class="btn btn-go" onclick="nextQFull()">'+(qi_full===TOTAL_FULL-1?'完成':'下一题')+'</button>'+
+      '</div>';
+    setTimeout(function(){var i=document.getElementById('inp');if(i)i.focus();},100);
+  }else{
+    var cv=ans_full[q.id];
+    document.getElementById('quizBody').innerHTML=
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><span style="font-size:12px;font-weight:700;">'+(qi_full+1)+'/'+TOTAL_FULL+'</span><div style="flex:1;height:3px;background:var(--bar-bg);border-radius:2px;"><div style="height:100%;border-radius:2px;background:var(--green);width:'+pct+'%;"></div></div><span style="font-size:12px;color:var(--sub);">'+pct+'%</span></div>'+
+      '<div class="dim-tag">'+dt+'</div><h2>'+q.t+'</h2>'+
+      '<div class="opts">'+q.o.map(function(o,i){var v=i+1;return '<div class="opt'+(cv===v?' sel':'')+'" data-v="'+v+'" onclick="selOptFull(this)"><span class="r"></span><span class="txt">'+o+'</span></div>';}).join('')+'</div>'+
+      '<div class="btn-row">'+
+        (qi_full>0?'<button class="btn btn-back" onclick="prevQFull()">← 返回</button>':'')+
+        '<button class="btn btn-go" onclick="nextQFull()">'+(qi_full===TOTAL_FULL-1?'完成，生成报告':'下一题')+'</button>'+
+      '</div>';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selOptFull(el){
+  el.parentElement.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  ans_full[Q_FULL[qi_full].id]=parseInt(el.dataset.v);
+}
+
+function nextQFull(){
+  var q=Q_FULL[qi_full];
+  if(q.type==='input'){
+    var v=document.getElementById('inp').value.trim();
+    if(!v){alert('请填写后再继续');return;}
+    ans_full[q.id]=v;
+  }else{
+    if(!ans_full[q.id]){alert('请选择一个选项');return;}
+  }
+  qi_full++;
+  renderQFull();
+}
+
+function prevQFull(){
+  if(qi_full>0){qi_full--;renderQFull();}
+}
+
+function dimScoreFull(p,c,ansObj){
+  var s=0,n=0;
+  for(var i=1;i<=c;i++){
+    var v=ansObj[p+i];
+    if(!v)continue;
+    var qi=Q_FULL.find(function(q){return q.id===p+i;});
+    var mx=qi?qi.o.length:5;
+    s+=v/mx;n++;
+  }
+  if(n===0)return 0;
+  return Math.round((s/n)*100);
+}
+
+function finishFull(){
+  document.getElementById('quizPhase').classList.remove('on');
+  document.getElementById('loadPhase').classList.add('on');
+  var el=document.getElementById('loadText'),i=0;
+  var texts=['正在分析六维数据...','正在匹配行业模型...','正在生成人物特征...','正在规划创业道路...','报告已生成'];
+  var t=setInterval(function(){if(i<texts.length){el.textContent=texts[i];i++;}},600);
+  setTimeout(function(){
+    clearInterval(t);
+    document.getElementById('loadPhase').classList.remove('on');
+    showFullResult();
+  },3300);
+}
+
 function getAvatar(g,l){return(g===2?'女':'男')+l+'.png';}
 
-const Q=[{d:0,t:"你计划在哪个城市开展项目？",type:"input",id:"city"},{d:0,t:"你的性别是？",type:"opt",id:"gender",o:["男","女"]},{d:0,t:"你的年龄段是？",type:"opt",id:"age",o:["25岁以下","25-35岁","36-45岁","46-55岁","55岁以上"]},{d:0,t:"你目前的职业状态？",type:"opt",id:"job",o:["在职想转行康养","已在康养行业","企业主/投资人","退休/半退休"]},{d:1,t:"可投入的启动资金规模？",type:"opt",id:"iv1",o:["10万以下","10-30万","30-80万","80-200万","200万以上"]},{d:1,t:"资金来源构成？",type:"opt",id:"iv2",o:["全部自有","自有+亲友借款","自有+银行贷款","合伙人出资","机构/投资人出资"]},{d:1,t:"半年内能否追加投资？",type:"opt",id:"iv3",o:["无法追加","可追加<10万","可追加10-50万","可追加50-100万","可追加>100万"]},{d:1,t:"投资回报周期预期？",type:"opt",id:"iv4",o:["6个月内","6-12个月","1-2年","2-3年","3年以上"]},{d:1,t:"应急周转金储备？",type:"opt",id:"iv5",o:["没有预留","1-3个月成本","3-6个月成本","6-12个月成本","12个月以上"]},{d:1,t:"项目财务负责人？",type:"opt",id:"iv6",o:["自己无财务背景","自己有财务背景","兼职财务","专职财务","财务团队/外包"]},{d:1,t:"对盈利模式的理解？",type:"opt",id:"iv7",o:["不太清楚","了解基本来源","研究过财务模型","有详细测算","有验证的盈利模型"]},{d:1,t:"其他可投资金情况？",type:"opt",id:"iv8",o:["几乎没有","少量储蓄","有其他投资收益","较充裕资金池","充足多渠道资金"]},{d:2,t:"社区/街道关系？",type:"opt",id:"rs1",o:["完全不了解","认识个别人员","与部分社区关系好","多社区深度合作","街道/区级资源"]},{d:2,t:"医疗健康领域资源？",type:"opt",id:"rs2",o:["暂无医疗资源","认识个别医护","与诊所社区医院有联系","与二级以上医院合作","自有医疗团队/深度网络"]},{d:2,t:"民政/卫健政策了解？",type:"opt",id:"rs3",o:["完全不了解","听说过一些","主动关注动态","熟悉且有信息渠道","有政府关系"]},{d:2,t:"行业人脉积累？",type:"opt",id:"rs4",o:["几乎没有人脉","有几个认识同行","有稳定交流圈子","本地圈内有一定影响力","广泛深度人脉网络"]},{d:2,t:"设备/物料供应链？",type:"opt",id:"rs5",o:["需从零找","知道供应商未联系","已初步接触","有几家稳定供应商","成熟供应链有议价力"]},{d:2,t:"技术/信息化资源？",type:"opt",id:"rs6",o:["没有技术背景","有基本信息化意识","有可用技术合作方","有专业技术团队","自主研发/深度整合"]},{d:2,t:"已有/能快速获取的客户？",type:"opt",id:"rs7",o:["零客户基础","少量意向咨询者","有稳定潜在客户渠道","已有签约/预付费客户","成熟客户池+转介绍"]},{d:2,t:"保险/长护险/医保对接？",type:"opt",id:"rs8",o:["不了解这些渠道","了解但未对接","正在了解对接流程","已与部分支付方建立联系","已打通多种支付渠道"]},{d:2,t:"人才招聘培训资源？",type:"opt",id:"rs9",o:["不知哪里招人","知道一些招聘渠道","有合作招聘渠道","有稳定人才供给管道","完善招聘+培训体系"]},{d:2,t:"除核心场地外物业资源？",type:"opt",id:"rs10",o:["只有核心场地","有少量可选物业信息","认识物业中介/房东","有多个可选物业","自有物业/稳定合作网络"]},{d:3,t:"行业从业年限？",type:"opt",id:"op1",o:["零经验跨界","1年以下","1-3年","3-5年","5年以上"]},{d:3,t:"团队管理经验？",type:"opt",id:"op2",o:["没有管理经验","管理过1-3人","管理过4-10人","管理过10-50人","管理过50人以上"]},{d:3,t:"核心团队人数？",type:"opt",id:"op3",o:["只有我自己","1-2人","3-5人","6-15人","15人以上"]},{d:3,t:"运营标准化(SOP)？",type:"opt",id:"op4",o:["没有SOP概念","有零散流程文档","有基础运营手册","有较完整定期更新SOP","成熟SOP体系可输出"]},{d:3,t:"服务质量管控？",type:"opt",id:"op5",o:["暂无质量管控概念","有基本服务要求","有简单检查反馈机制","有系统质量管理体系","完整数据驱动质量管控"]},{d:3,t:"员工培训考核？",type:"opt",id:"op6",o:["没有培训计划","有简单入职培训","有定期内部培训","系统培训+考核+晋升","完善培训学院/外部合作"]},{d:3,t:"应急事件处理？",type:"opt",id:"op7",o:["没想过这些问题","有一些基本意识","有简单应急预案","详细预案且定期演练","专业应急团队+风控体系"]},{d:3,t:"证照合规资质？",type:"opt",id:"op8",o:["尚未了解","了解但未办理","部分证照已取得","主要证照齐全","齐全且持续关注政策变化"]},{d:3,t:"数字化/信息化系统？",type:"opt",id:"op9",o:["不打算用信息化","有使用意愿未选型","正在搭建基础系统","已有部分系统运行","全面数字化数据驱动"]},{d:3,t:"运营成本控制？",type:"opt",id:"op10",o:["没有成本控制概念","有基本记账预算","定期分析成本优化","系统成本管控降本","精细化成本管理领先"]},{d:4,t:"可用场地总面积？",type:"opt",id:"ex1",o:["暂无场地","100㎡以下","100-300㎡","300-800㎡","800-2000㎡","2000㎡以上"]},{d:4,t:"场地性质？",type:"opt",id:"ex2",o:["尚未确定","自有住宅/改造","租赁商业用房","医疗/养老专项用地","酒店/度假村/综合体"]},{d:4,t:"场地位置？",type:"opt",id:"ex3",o:["尚未选址","郊区/新开发区域","城市非核心区","城市次中心","城市核心区/优质地段"]},{d:4,t:"装修/改造进度？",type:"opt",id:"ex4",o:["尚未开始","方案设计中","施工进行中","硬装完成软装中","已全部完成可用"]},{d:4,t:"证照办理进度？",type:"opt",id:"ex5",o:["尚未开始了解","正在了解所需证照","材料准备中","部分已提交审批","证照齐全"]},{d:4,t:"计划启动时间？",type:"opt",id:"ex6",o:["尚无明确时间表","1年以后","6-12个月内","3-6个月内","1-3个月内","已启动运营"]},{d:4,t:"合作方确定程度？",type:"opt",id:"ex7",o:["无合作方","正在寻找合作方","已有意向合作方","合作方基本确定","已签约开始协作"]},{d:4,t:"设备/设施采购？",type:"opt",id:"ex8",o:["尚未开始","已完成需求清单","正在选型比价","部分已采购到位","全部到位可用"]},{d:4,t:"试运营/接待能力？",type:"opt",id:"ex9",o:["完全没有","计划3个月后","1-2个月后","即将具备(1月内)","已具备可随时接待"]},{d:5,t:"目标市场调研？",type:"opt",id:"mk1",o:["没做过调研","凭感觉日常观察","做过简单市场了解","有系统市场调研","有专业第三方调研报告"]},{d:5,t:"本地竞品了解？",type:"opt",id:"mk2",o:["完全不了解","知道有几家竞品","了解主要内容和价格","系统分析过优劣势","持续追踪有应对策略"]},{d:5,t:"定价策略清晰度？",type:"opt",id:"mk3",o:["还没想过定价","有大致的价格范围","参考竞品定初步价格","有明确定价策略依据","动态定价模型可调"]},{d:5,t:"获客渠道储备？",type:"opt",id:"mk4",o:["没有获客计划","有计划未开始","已有1-2个渠道","多渠道获客初步搭建","获客体系成熟成本可控"]},{d:5,t:"品牌/命名准备？",type:"opt",id:"mk5",o:["还没有品牌概念","有初步的想法","品牌名称定位已定","品牌VI系统已完成","品牌已有一定知名度"]},{d:5,t:"营销推广预算？",type:"opt",id:"mk6",o:["没有营销预算","少量预算(月<1000)","月1000-5000元","月5000-20000元","月20000元以上"]},{d:5,t:"客户关系管理(CRM)？",type:"opt",id:"mk7",o:["没有CRM概念","有基本客户记录","有简单CRM工具","有系统客户管理体系","数据驱动客户运营"]},{d:5,t:"口碑/转介绍机制？",type:"opt",id:"mk8",o:["没有转介绍机制","靠自然口碑传播","有激励转介绍方案","有成熟口碑裂变体系","口碑是主要获客来源"]},{d:5,t:"服务差异化优势？",type:"opt",id:"mk9",o:["和竞品差不多","有一两个小亮点","有明显差异化服务","差异化突出有壁垒","独一无二难以复制"]},{d:5,t:"线上运营能力？",type:"opt",id:"mk10",o:["不做线上","偶尔发朋友圈","有运营1个平台","多平台有规划运营","专业内容团队效果好"]},{d:6,t:"服务模式创新程度？",type:"opt",id:"in1",o:["复制现有模式","小幅调整","有创新核心不变","模式明显创新","完全独创服务模式"]},{d:6,t:"科技/智能设备应用？",type:"opt",id:"in2",o:["不打算用科技","用一些基础设备","愿意尝试智能设备","计划系统化引入","科技驱动核心竞争力"]},{d:6,t:"跨界整合能力？",type:"opt",id:"in3",o:["不考虑跨界","有想法未落地","探索1-2个方向","有明确跨界整合方案","跨界融合核心模式"]},{d:6,t:"数据驱动意愿/能力？",type:"opt",id:"in4",o:["不打算用数据","会简单记录数据","定期分析优化运营","有分析系统专职人员","数据核心资产驱动"]},{d:6,t:"行业前沿趋势关注？",type:"opt",id:"in5",o:["不太关注","偶尔看到相关新闻","定期查阅行业信息","系统性追踪行业趋势","深度参与研讨有前瞻"]},{d:6,t:"会员/订阅等新模式？",type:"opt",id:"in6",o:["只做传统按次收费","考虑过不确定","正在设计会员体系","有完整会员/订阅方案","多种创新模式组合"]},{d:6,t:"适老化设计重视？",type:"opt",id:"in7",o:["没想过适老化","大概知道一些要求","按规范做适老化","请专业团队设计","体验是核心竞争力"]},{d:6,t:"连锁/加盟/托管？",type:"opt",id:"in8",o:["只做单店","未来可能考虑","有初步扩张设想","有明确扩张计划模型","扩张模型已设计完成"]}];
-const TOTAL=Q.length,ans={};let qi=0,isPreview=false;
-function renderQ(){if(qi>=TOTAL){finish();return;}const q=Q[qi],pct=Math.round(qi/TOTAL*100);document.getElementById('stepNum').textContent=(qi+1)+'/'+TOTAL;document.getElementById('stepBar').style.width=pct+'%';document.getElementById('stepPct').textContent=pct+'%';const dims=['','投资力','资源力','运营力','执行力','市场力','创新力'],dt=q.d===0?'基础信息':dims[q.d];if(q.type==='input'){document.getElementById('quizBody').innerHTML=`<div class="dim-tag">${dt}</div><h2>${q.t}</h2><input class="q-input" id="inp" placeholder="请输入城市名称" value="${ans[q.id]||''}"><div class="btn-row">${qi>0?'<button class="btn btn-back" onclick="prevQ()">← 返回</button>':''}<button class="btn btn-go" onclick="nextQ()">${qi===TOTAL-1?'完成':'下一题'}</button></div>`;setTimeout(()=>{const i=document.getElementById('inp');if(i)i.focus();},100);}else{const cv=ans[q.id];document.getElementById('quizBody').innerHTML=`<div class="dim-tag">${dt}</div><h2>${q.t}</h2><div class="opts">${q.o.map((o,i)=>{const v=i+1;return`<div class="opt${cv===v?' sel':''}" data-v="${v}" onclick="selOpt(this)"><span class="r"></span><span class="txt">${o}</span></div>`;}).join('')}</div><div class="btn-row">${qi>0?'<button class="btn btn-back" onclick="prevQ()">← 返回</button>':''}<button class="btn btn-go" onclick="nextQ()">${qi===TOTAL-1?'完成，生成报告':'下一题'}</button></div>`;}window.scrollTo({top:0,behavior:'smooth'});}
-function selOpt(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');ans[Q[qi].id]=parseInt(el.dataset.v);}
-function nextQ(){const q=Q[qi];if(q.type==='input'){const v=document.getElementById('inp').value.trim();if(!v){alert('请填写后再继续');return;}ans[q.id]=v;}else{if(!ans[q.id]){alert('请选择一个选项');return;}}qi++;renderQ();}
-function prevQ(){if(qi>0){qi--;renderQ();}}
-function finish(){document.getElementById('quizPhase').classList.remove('on');document.getElementById('loadPhase').classList.add('on');const texts=['正在分析六维数据...','正在匹配行业模型...','正在生成人物特征...','正在规划创业道路...','报告已生成'];let i=0;const el=document.getElementById('loadText');const t=setInterval(()=>{if(i<texts.length){el.textContent=texts[i];i++;}},600);setTimeout(()=>{clearInterval(t);document.getElementById('loadPhase').classList.remove('on');showResult();},3300);}
-function dimScore(p,c){let s=0,n=0;for(let i=1;i<=c;i++){const v=ans[p+i];if(!v)continue;const qi=Q.find(function(q){return q.id===p+i;});const mx=qi?qi.o.length:5;s+=v/mx;n++;}if(n===0)return 0;return Math.round((s/n)*100);}
+function showFullResult(){
+  var _ans={};for(var k in ans_full)_ans[k]=ans_full[k];
+  var iv=dimScoreFull('iv',8,_ans),rs=dimScoreFull('rs',10,_ans),op=dimScoreFull('op',10,_ans);
+  var ex=dimScoreFull('ex',9,_ans),mk=dimScoreFull('mk',10,_ans),inn=dimScoreFull('in',8,_ans);
+  var total=Math.round(iv*0.2+rs*0.2+op*0.2+ex*0.15+mk*0.15+inn*0.1);
+  var gender=_ans.gender||1;
 
-// 文案
-const traits={1:'尽管康养产业对你来说还是一片尚待探索的新天地，然而，正是这份"跨界而来"的新鲜视角，让你不会被行业旧规所束缚。你对新知识的渴望如同海绵吸水——每一场行业交流、每一次实地走访，都能让你迅速建立起自己的认知框架。不过，当前阶段你如同一块未经雕琢的璞玉：热情有余而经验不足。当面对那些需要深厚行业积淀才能做出的关键决策时，你有时会感到如履薄冰。但正是这份"初生牛犊"的勇气，让你敢于尝试那些成熟玩家不敢轻易触碰的轻资产创新模式。你起步虽晚，奔跑的速度却可能远超他人。',2:'你在康养创业的道路上，走的是一条稳扎稳打的务实之路。你深知康养的本质不是资本的狂欢，而是信任的积累——每一个社区关系的维护、每一位客户口碑的建立，都是你比别人走得更远的底气。尽管你并非行业中最高调的存在，但你拥有一种稀缺的能力：在危机时刻保持冷静，在繁琐日常中坚持标准。然而，你的稳健有时也意味着你不太愿意冒险尝试新路径，面对需要快速决策的机遇时，你可能会因过度审慎而错失良机。但无论如何，在康养这个"慢行业"里，你的风格恰恰是最耐得住时间考验的。',3:'你站在一个令人羡慕的位置——既有扎实的行业根基，又有扩张的野心和能力。你不再满足于经营好一家店，你的目光已经投向了一个区域的版图。在团队面前，你是那个能在混乱中建立秩序的人；在竞争者面前，你是那个不声不响却步步为营的对手。然而，随着版图的扩展，你面临的最大挑战不再是"能不能做"，而是"能不能做好每一个"。管理半径的扩大意味着你无法再事必躬亲——如何放手信任团队、如何在标准化与灵活性之间找到平衡，是你接下来必须跨越的坎。',4:'你身上有一种让投资人无法忽视的特质——你不仅有想法，更有将想法快速落地的执行力。在康养这个以"慢"著称的行业里，你是一匹不容忽视的快马。你对品牌的价值有着天生的敏感，你深知在消费者心中占据一个清晰的位置比什么都重要。然而，加速度带来的惯性也让你时刻面临"刹不住车"的风险——当多个项目同时推进时，你的注意力和资源可能被过度稀释。你的挑战从来不是"能不能跑起来"，而是"跑得快的同时能不能跑得稳"。',5:'你是康养产业金字塔尖那为数不多的一群人——你们不再只是在做一门生意，而是在定义一个行业的走向。你的视野早已超越了单店盈亏，你看到的是产业链、是生态圈、是可复制的标准。在动荡的市场环境和复杂的政策博弈中，你是那个能够稳住军心的人。然而，高处不胜寒——当你越来越习惯于用战略思维俯瞰全局时，也越容易忽略那些最基础的、最琐碎的日常。保持对一线的感知力、维持组织的创新活力，是你在这个段位最需要警惕的事情。'};
-const paths={1:'轻资产、低风险的小规模社区康养模式是你的最佳切入点。以"社区嵌入式养老服务"或"日间照料站"为核心，先在一个社区验证模式，再逐步复制。这个阶段最重要的是积累行业经验和社区资源，而不是追求规模。',2:'标准化运营+品牌化路线是你的成长方向。将当前项目打磨成可复制的样板，建立SOP体系，同时开始构建品牌识别度。适合以"社区康养中心"或"综合为老服务中心"为核心业态，深耕一个区域。',3:'多网点协同布局是你的核心竞争力。在主城区完成2-3个网点的协同布局，形成区域品牌势能。可以考虑向上游延伸（如适老化改造、康复辅具租赁），丰富收入结构，建立区域壁垒。',4:'资本化+生态化扩张是你的加速器。启动融资或引入战略合作，同时向上下游延伸产业链。可以考虑"康养+旅游""康养+教育"等跨界融合模式，用品牌溢价构建竞争护城河。',5:'产业标准化输出是你的终极战场。不仅做项目，更要输出标准——运营手册、培训体系、品牌授权。探索"康养+地产""康养+保险"等资本密集型模式，在更广阔的产业生态中布局。'};
-const projects={1:[{t:'社区日间照料站',l:0},{t:'居家养老上门服务',l:0},{t:'老年助餐点',l:0},{t:'健康管理咨询',l:1},{t:'适老化改造服务',l:1},{t:'老年文旅策划',l:1}],2:[{t:'社区综合为老服务中心',l:0},{t:'老年康复理疗馆',l:0},{t:'社区嵌入式养老院',l:0},{t:'老年营养配餐中心',l:1},{t:'康复辅具租赁站',l:1},{t:'老年兴趣培训中心',l:1}],3:[{t:'区域康养连锁品牌',l:0},{t:'医养结合护理院',l:0},{t:'老年康复医院',l:0},{t:'康养人才培训基地',l:1},{t:'智慧养老平台',l:1},{t:'康养产业园区',l:1}],4:[{t:'高端康养度假村',l:0},{t:'CCRC持续照料社区',l:0},{t:'康养+文旅综合体',l:0},{t:'康养产业投资基金',l:1},{t:'康养品牌特许经营',l:1},{t:'跨境康养服务',l:1}],5:[{t:'康养产业集团化运营',l:0},{t:'康养地产开发',l:0},{t:'康养+保险金融产品',l:0},{t:'康养行业标准制定',l:1},{t:'国际康养品牌引进',l:1},{t:'康养产业并购基金',l:1}]};
-const styles={1:'你属于"探索学习者"型创业者。喜欢亲力亲为、在实践中快速学习，对新鲜事物保持高度敏感。你适合从轻资产、低风险的小项目起步，在试错中积累经验和信心。你的灵活性是你的最大优势，但需要警惕"东一榔头西一棒槌"——选定一个方向后，需要给自己足够的时间去深耕验证。',2:'你属于"稳健工匠"型创业者。善于将一件事做到极致，不追求速度但追求品质。你的创业风格偏向"精耕细作"——把一家店运营到完美再考虑下一家。这种风格在康养行业尤其珍贵，因为客户信任是一点一滴积累的。但要注意：过于追求完美有时会让你错失市场窗口。',3:'你属于"系统构建者"型创业者。擅长搭建体系、组建团队、复制模式。你是有能力将一个创业项目做成一个区域品牌的少数人。你的创业风格偏向"建系统、带团队、定标准"——你不再是一个人在战斗，而是一个体系的操盘者。核心挑战在于如何在扩张中保持品质一致性。',4:'你属于"增长黑客"型创业者。善于发现机会、快速行动、用资本杠杆放大业务。你的创业风格是"先开枪后瞄准"——在市场窗口期迅速占位，然后边跑边调整。这种风格在康养行业需要特别注意：康养的底层是服务品质和信任，如果扩张速度超过了组织能力，品牌会遭到不可逆的损伤。',5:'你属于"产业定义者"型创业者。你不仅仅在做创业，你是在参与塑造一个行业。你的创业风格偏向"顶层设计"——从标准、品牌、资本三个维度同时推进。你是少有的能在宏观战略和微观执行之间自如切换的人。最大的挑战是组织熵增和持续创新。'};
-const growth={1:'你的成长之路，核心在于"积累"二字。尽管你的热情和学习能力是你的天赋优势，但康养行业有它不可逾越的成长曲线——有些坑必须亲自踩过才知道深浅。建议你找到一个行业导师，用他人的经验加速你自己的成长。同时，不要因为自己是"跨界者"而自我设限——恰恰是你的跨界视角，可能带来行业最需要的创新。哪怕每天只进步一点，坚持下去，半年后的你会让自己刮目相看。',2:'你的成长瓶颈不在于执行力，而在于"破圈"的勇气。你已经在一个小范围内证明了自己，现在需要的是把视野打开——参加行业峰会、结交比你高一个段位的同行、主动接触资本和资源的圈子。你的稳健是一把双刃剑，它保护了你，也可能限制了你。试着每季度做一件让你"不太舒服"的事，比如公开演讲、跨区域考察，这些都将成为你成长的催化剂。',3:'你正处于从"优秀个人"到"优秀领导者"的转型期。你过去靠自己的能力和勤奋走到今天，但接下来你需要学会的是"通过他人拿到结果"。这意味着你要在选人、育人、授权上投入比以往更多的时间和精力。放手的初期可能会让你感到不安——你会觉得别人做得不如你好——但这是你必须跨越的门槛。记住：一个人走得快，一群人走得远。',4:'你的核心成长课题是"在速度与品质之间找到平衡"。你天生适合做增长，但康养行业的特殊性决定了它不是一个纯粹的"规模游戏"。你需要建立一套品质监控体系，确保在快速扩张中服务标准不下滑。同时，你也要开始关注自己的精力管理——高速增长对你个人的消耗是巨大的。学会在冲锋和休整之间找到节奏，你才能打持久战。',5:'你的成长已经超越了"能力提升"的范畴，进入了一个更深刻的阶段——"角色重塑"。你不再是简单地管理一家公司，你代表的是行业的高度。这意味着你需要花更多的时间在那些不紧急但极其重要的事情上：思考行业趋势、培养接班人、建立行业生态。同时，保持谦逊和对外界的敏感度——位高权重之后，最容易失去的就是真实的信息触角。'};
-const relations={1:'在商业关系中，你是一个真诚而直接的人。你不会用华丽的辞藻包装自己，而是用行动证明价值。这种"说到做到"的风格，在康养这个信任成本极高的行业里，是你最宝贵的社交资产。不过，你的社交圈可能还比较窄——建议你有意识地拓展行业人脉，多参加行业协会活动，结识志同道合的创业伙伴。记住：康养是一个"抱团取暖"的行业，找到对的合作伙伴，能让你少走很多弯路。',2:'在商业关系中，你更习惯用实际成果而非口才建立信任。你是一个可靠、守信的合作伙伴——承诺了就会做到，交付了就会负责。这种品质在康养行业尤其珍贵，因为行业中的长期合作关系往往建立在信任之上。但你的短板在于"不善推销自己"——你可能做了十分，但只被看到了三分。学会适当地展示自己的成绩和规划，会让更多优质的合作伙伴主动找上门来。',3:'你是一个擅长做"资源连接器"的人。你能够把合适的人、资源、机会串联在一起，创造出更大的价值。你的商业关系网络正在从"点对点"升级为"网络化"——你不再只是一个节点，而是正在成为别人网络中的关键枢纽。但要警惕的是：随着你的影响力扩大，你需要更加谨慎地选择合作伙伴，一个错误的联姻可能让你付出高昂的代价。',4:'你在商业关系中是一个"引力场"。你的品牌影响力、行业资源和增长势头，天然地吸引着各种合作伙伴向你靠拢。你擅长在合作中发现共赢点，能用商业逻辑说服各方达成共识。然而，快速扩张中的合作关系往往建立在利益基础上——当风向转变时，这些关系能否经得住考验？你需要有意识地在利益关系之外，建立几个基于信任和价值观的深度伙伴关系。',5:'你在商业关系中扮演的是"规则制定者"的角色。合作伙伴与你合作的动机，不只是因为你能带来的直接价值，更因为你所代表的行业高度和生态位。但随之而来的挑战是：你需要比任何人都更谨慎地维护商业信誉——你的一举一动都在被行业放大审视。同时，你也需要在"竞合关系"中找到恰当的平衡——什么时候竞、什么时候合，需要更精细的判断。'};
-const strMap={1:[{t:'实践操作',d:'你能够快速掌握实用且具体的任务，将所学知识应用于实际解决方案。'},{t:'乐于挑战',d:'你把多样化的任务当作激励自我的机会，而不是压力来源。'},{t:'灵活学习者',d:'新工具和新方法不会让你畏惧，你总是愿意根据实际需要提升技能。'},{t:'好奇心驱动',d:'你对康养行业充满探索欲，愿意从零开始学习，快速吸收新知识。'},{t:'低成本试错',d:'你能用小规模实验快速验证想法，避免大额投入带来的风险。'},{t:'跨界视角',d:'来自其他行业的经验让你拥有不同于传统康养从业者的独特视角。'}],2:[{t:'实践操作',d:'你能够将标准化流程落实到位，确保每个环节都经得起检验。'},{t:'快速排查问题',d:'你能敏捷地发现并解决工作中的难题，尽量减少停滞和损失。'},{t:'压力下冷静',d:'在紧张或危机时刻，你能保持镇定，确保思路清晰和工作高效。'},{t:'社区信任构建',d:'你擅长建立和维护邻里关系，用真诚赢得客户长期信任。'},{t:'成本把控',d:'你对成本和现金流有天然的敏感度，确保项目在安全边际内运营。'},{t:'耐力持久',d:'你不追求一夜爆红，而是愿意用时间和耐心换取扎实的成果。'}],3:[{t:'独立思考者',d:'你相信自己的分析和判断，勇于突破常规，避免盲从。'},{t:'系统化思维',d:'你能把复杂问题拆解为可执行的步骤，建立高效运营体系。'},{t:'乐于挑战',d:'多样化和高难度的任务让你保持兴奋，推动你不断突破上限。'},{t:'资源整合力',d:'你擅长调配各方资源，实现 1+1>2 的协同效应。'},{t:'团队领导力',d:'你能够聚拢人才、激励团队，带领大家朝共同目标前进。'},{t:'市场嗅觉',d:'你对区域市场的需求和空白有着敏锐的直觉，能发现被忽视的机会。'}],4:[{t:'独立思考者',d:'你相信自己的分析和判断，勇于突破常规，避免盲从。'},{t:'乐于挑战',d:'复杂和高风险的项目反而让你兴奋，激发你的战斗力和创造力。'},{t:'品牌意识强',d:'你深知品牌价值，擅长打造差异化竞争优势，抢占用户心智。'},{t:'战略视野',d:'你能从宏观角度审视行业格局，在混沌中发现增长机会。'},{t:'快速决策',d:'在信息不完备的情况下，你仍能果断决策并快速执行。'},{t:'融资能力',d:'你善于用商业逻辑和数据说服投资人，为项目争取关键资本支持。'}],5:[{t:'独立思考者',d:'你相信自己的分析和判断，勇于突破常规，避免盲从。'},{t:'实践操作',d:'你能将复杂战略转化为可执行的行动计划，确保落地效果。'},{t:'快速排查问题',d:'丰富经验让你能迅速识别风险并提前规避，防患于未然。'},{t:'压力下冷静',d:'在行业变革和危机面前，你是团队的主心骨，稳定军心。'},{t:'战略定力',d:'不随波逐流，坚守长期价值，在风口变换中保持方向感。'},{t:'生态思维',d:'你不是在做一家公司，而是在编织一张产业协同的价值网络。'}]};
-const warnMap={1:[{t:'不喜欢重复性工作',d:'重复或单调的任务容易让你失去兴趣，导致拖延和效率下降。'},{t:'行业经验不足',d:'缺乏实战经验可能导致判断失误，需要在试错中不断学习。'},{t:'资源网络薄弱',d:'人脉和渠道的缺失需要时间积累，短期内可能限制发展速度。'},{t:'易受新奇事物干扰',d:'遇到新鲜有趣的事，你容易分心，忽略手头的工作。'},{t:'过度乐观',d:'热情有时让你低估了行业门槛和竞争烈度，需要更务实的心态。'},{t:'财务意识薄弱',d:'对数字不够敏感，可能忽视了隐形成本和现金流风险。'}],2:[{t:'不喜欢重复性工作',d:'模式固化后，你可能缺乏突破舒适区的勇气和动力。'},{t:'社交主动性弱',d:'与新联系人建立联系或在职业上推销自己让你感到不舒服。'},{t:'沟通简略',d:'你表达直接简洁，有时会遗漏关键细节，导致同事困惑。'},{t:'规模化思维不足',d:'习惯于单店运营思维，面对规模化扩张时可能力不从心。'},{t:'品牌意识薄弱',d:'过度依赖口碑传播，忽视了主动打造品牌的重要性。'},{t:'对新趋势反应慢',d:'务实有时变成保守，可能错过行业升级的时间窗口。'}],3:[{t:'难以全情投入',d:'长期项目或固定职责让你感觉受限，影响你的积极性和专注度。'},{t:'对理论耐心不足',d:'抽象或纯理论的讨论让你感到无趣，常常提前失去兴趣。'},{t:'快速扩张中易忽视细节',d:'追求速度和规模时，可能在运营品质上做出妥协。'},{t:'关键人才依赖',d:'核心事务过度依赖特定人才，团队断层风险不容忽视。'},{t:'授权困难',d:'习惯事必躬亲，难以真正放手让团队独立承担关键任务。'},{t:'资源分散',d:'多线作战时容易被各种机会牵引，导致核心业务失焦。'}],4:[{t:'压力下易急于求成',d:'在快速扩张的压力下，有时会为了速度而牺牲决策质量。'},{t:'社交主动性弱',d:'主动拓展高端人脉圈层让你感到不自在，可能错失合作机会。'},{t:'易受新奇事物干扰',d:'新机会不断出现，可能导致资源分散、战略失焦。'},{t:'组织管理滞后',d:'业务增长可能跑在组织能力前面，管理体系建设需要跟上。'},{t:'精力透支',d:'高速运转的模式让你容易忽视身心健康，长期不可持续。'},{t:'团队忠诚度',d:'快速扩张中招募的人才，价值观融合和留存是隐性挑战。'}],5:[{t:'难以全情投入',d:'标准化运营已成体系，日常琐事和例行公事让你感到无趣。'},{t:'沟通简略',d:'高度概括的表达方式，可能让执行层难以跟上你的思路和节奏。'},{t:'对理论耐心不足',d:'对新兴概念可能持怀疑态度，不经意间错失创新机会。'},{t:'组织熵增',d:'规模越大，组织惰性越强，维持创业初期的敏捷性是一大挑战。'},{t:'信息茧房',d:'位高权重后，听到的真实声音越来越少，决策容易脱离实际。'},{t:'继任者缺位',d:'团队高度依赖你的个人能力，缺乏可接班的第二梯队。'}]};
+  var name,sub,level;
+  if(total<25){name='潜力探索者';sub='Potential Explorer';level=1;}
+  else if(total<44){name='稳健筑基者';sub='Steady Builder';level=2;}
+  else if(total<62){name='区域运营家';sub='Regional Operator';level=3;}
+  else if(total<82){name='增长加速者';sub='Growth Accelerator';level=4;}
+  else{name='产业操盘手';sub='Industry Master';level=5;}
 
-// 六维颜色(HSL S=45% L=56% 六等分 60°间隔)
-const dimColors=['#cc6b6b','#bdb04d','#5cb85c','#4dabab','#5c5ccc','#b84db8'];
-const dimDetail={投资力:{hiDesc:'资金充沛，可做更大规模布局。考虑中高端康养模式，用资本建品牌壁垒。',loDesc:'资金偏紧，倒逼精打细算。轻资产模式最优——用智慧而非金钱驱动增长。',hiTip:'建议尝试中型社区康养中心，建立标准化运营模型',loTip:'建议从社区嵌入式服务起步，用最小成本验证模式'},资源力:{hiDesc:'人脉广渠道多，可快速调动社区、医疗、政府资源协同作战。',loDesc:'资源有限，练就独立自主。不依赖外部，靠自己建立信任。',hiTip:'建议启动多资源协同项目，如医养结合中心',loTip:'建议从拜访社区开始，逐一建立关系'},运营力:{hiDesc:'成熟运营体系，项目可复制性强——连锁扩张是天然优势。',loDesc:'缺乏成熟框架，但无条条框框——灵活应变是初创期最大竞争力。',hiTip:'建议梳理SOP手册，为多店复制做好准备',loTip:'建议边做边总结，在实践中形成运营方法'},执行力:{hiDesc:'场地团队证照顺畅，快速落地能力——先发优势是核心武器。',loDesc:'推进不快，但每个决策都深思熟虑——慢，但每一步都稳当。',hiTip:'建议利用先发优势抢占区域，快速建立品牌认知',loTip:'建议保持稳健节奏，确保每个环节做细'},市场力:{hiDesc:'擅长品牌营销，获客渠道丰富——规模化获客是最大优势。',loDesc:'不擅花哨营销，但用服务和口碑说话——获客虽慢但粘性极高。',hiTip:'建议加大品牌投入，线上线下多渠道获客',loTip:'建议专注服务品质，用口碑裂变替代广告投放'},创新力:{hiDesc:'对新模式持开放态度，敢于尝试——创新是最大差异化武器。',loDesc:'对花哨创新不感冒，但务实是康养最稀缺品质——服务做透比创新重要。',hiTip:'建议引入科技和跨界元素，打造差异化竞争力',loTip:'建议聚焦核心服务，深耕一个领域即护城河'}};
+  document.getElementById('fullAvatar').src=getAvatar(gender,level);
+  document.getElementById('fullName').textContent=name;
+  document.getElementById('fullSub').textContent=sub + ' · 综合评分：'+total+'分';
 
-function showResult(){
-// 立即快照当前答题数据，防止后续操作污染
-var _ans={};for(var k in ans)_ans[k]=ans[k];
-var _calc={iv:dimScore('iv',8),rs:dimScore('rs',10),op:dimScore('op',10),ex:dimScore('ex',9),mk:dimScore('mk',10),inn:dimScore('in',8)};
-var _gender=_ans.gender||1;
-document.getElementById('resPhase').classList.add('on');document.getElementById('previewBack').style.display=isPreview?'flex':'none';
-var iv=_calc.iv,rs=_calc.rs,op=_calc.op,ex=_calc.ex,mk=_calc.mk,inn=_calc.inn;
-const total=Math.round(iv*0.2+rs*0.2+op*0.2+ex*0.15+mk*0.15+inn*0.1);
-let name,sub,level;if(total<25){name='潜力探索者';sub='Potential Explorer';level=1;}else if(total<44){name='稳健筑基者';sub='Steady Builder';level=2;}else if(total<62){name='区域运营家';sub='Regional Operator';level=3;}else if(total<82){name='增长加速者';sub='Growth Accelerator';level=4;}else{name='产业操盘手';sub='Industry Master';level=5;}
-document.getElementById('charSvg').innerHTML=`<img src="${getAvatar(_gender,level)}" alt="avatar">`;
-document.getElementById('rName').textContent=name;document.getElementById('rSubtitle').textContent=sub;window._lastLevel=name;
-const badges={1:[{t:'康养新锐',c:'blue'},{t:'轻资产起步',c:'green'}],2:[{t:'实干派',c:'green'},{t:'社区根基',c:'blue'}],3:[{t:'区域操盘手',c:'gold'},{t:'资源整合者',c:'blue'},{t:'规模化基因',c:'green'}],4:[{t:'高成长型',c:'purple'},{t:'多线作战',c:'blue'},{t:'品牌驱动',c:'gold'}],5:[{t:'产业领航者',c:'gold'},{t:'全能操盘',c:'purple'},{t:'生态构建',c:'blue'},{t:'资本级',c:'gold'}]};
-document.getElementById('rBadges').innerHTML=badges[level].map(b=>`<span class="r-badge ${b.c}">${b.t}</span>`).join('');
-document.getElementById('rTrait').textContent=traits[level];
+  // 简化结果
+  var traits={1:'尽管康养产业对你来说还是一片尚待探索的新天地，然而，正是这份"跨界而来"的新鲜视角，让你不会被行业旧规所束缚。你对新知识的渴望如同海绵吸水——每一场行业交流、每一次实地走访，都能让你迅速建立起自己的认知框架。不过，当前阶段你如同一块未经雕琢的璞玉：热情有余而经验不足。当面对那些需要深厚行业积淀才能做出的关键决策时，你有时会感到如履薄冰。但正是这份"初生牛犊"的勇气，让你敢于尝试那些成熟玩家不敢轻易触碰的轻资产创新模式。你起步虽晚，奔跑的速度却可能远超他人。',2:'你在康养创业的道路上，走的是一条稳扎稳打的务实之路。你深知康养的本质不是资本的狂欢，而是信任的积累——每一个社区关系的维护、每一位客户口碑的建立，都是你比别人走得更远的底气。尽管你并非行业中最高调的存在，但你拥有一种稀缺的能力：在危机时刻保持冷静，在繁琐日常中坚持标准。然而，你的稳健有时也意味着你不太愿意冒险尝试新路径，面对需要快速决策的机遇时，你可能会因过度审慎而错失良机。但无论如何，在康养这个"慢行业"里，你的风格恰恰是最耐得住时间考验的。',3:'你站在一个令人羡慕的位置——既有扎实的行业根基，又有扩张的野心和能力。你不再满足于经营好一家店，你的目光已经投向了一个区域的版图。在团队面前，你是那个能在混乱中建立秩序的人；在竞争者面前，你是那个不声不响却步步为营的对手。然而，随着版图的扩展，你面临的最大挑战不再是"能不能做"，而是"能不能做好每一个"。管理半径的扩大意味着你无法再事必躬亲——如何放手信任团队、如何在标准化与灵活性之间找到平衡，是你接下来必须跨越的坎。',4:'你身上有一种让投资人无法忽视的特质——你不仅有想法，更有将想法快速落地的执行力。在康养这个以"慢"著称的行业里，你是一匹不容忽视的快马。你对品牌的价值有着天生的敏感，你深知在消费者心中占据一个清晰的位置比什么都重要。然而，加速度带来的惯性也让你时刻面临"刹不住车"的风险——当多个项目同时推进时，你的注意力和资源可能被过度稀释。你的挑战从来不是"能不能跑起来"，而是"跑得快的同时能不能跑得稳"。',5:'你是康养产业金字塔尖那为数不多的一群人——你们不再只是在做一门生意，而是在定义一个行业的走向。你的视野早已超越了单店盈亏，你看到的是产业链、是生态圈、是可复制的标准。在动荡的市场环境和复杂的政策博弈中，你是那个能够稳住军心的人。然而，高处不胜寒——当你越来越习惯于用战略思维俯瞰全局时，也越容易忽略那些最基础的、最琐碎的日常。保持对一线的感知力、维持组织的创新活力，是你在这个段位最需要警惕的事情。'};
+  var styles={1:'你属于"探索学习者"型创业者。喜欢亲力亲为、在实践中快速学习，对新鲜事物保持高度敏感。你适合从轻资产、低风险的小项目起步，在试错中积累经验和信心。你的灵活性是你的最大优势，但需要警惕"东一榔头西一棒槌"——选定一个方向后，需要给自己足够的时间去深耕验证。',2:'你属于"稳健工匠"型创业者。善于将一件事做到极致，不追求速度但追求品质。你的创业风格偏向"精耕细作"——把一家店运营到完美再考虑下一家。这种风格在康养行业尤其珍贵，因为客户信任是一点一滴积累的。但要注意：过于追求完美有时会让你错失市场窗口。',3:'你属于"系统构建者"型创业者。擅长搭建体系、组建团队、复制模式。你是有能力将一个创业项目做成一个区域品牌的少数人。你的创业风格偏向"建系统、带团队、定标准"——你不再是一个人在战斗，而是一个体系的操盘者。核心挑战在于如何在扩张中保持品质一致性。',4:'你属于"增长黑客"型创业者。善于发现机会、快速行动、用资本杠杆放大业务。你的创业风格是"先开枪后瞄准"——在市场窗口期迅速占位，然后边跑边调整。这种风格在康养行业需要特别注意：康养的底层是服务品质和信任，如果扩张速度超过了组织能力，品牌会遭到不可逆的损伤。',5:'你属于"产业定义者"型创业者。你不仅仅在做创业，你是在参与塑造一个行业。你的创业风格偏向"顶层设计"——从标准、品牌、资本三个维度同时推进。你是少有的能在宏观战略和微观执行之间自如切换的人。最大的挑战是组织熵增和持续创新。'};
+  var growth={1:'你的成长之路，核心在于"积累"二字。尽管你的热情和学习能力是你的天赋优势，但康养行业有它不可逾越的成长曲线——有些坑必须亲自踩过才知道深浅。建议你找到一个行业导师，用他人的经验加速你自己的成长。同时，不要因为自己是"跨界者"而自我设限——恰恰是你的跨界视角，可能带来行业最需要的创新。哪怕每天只进步一点，坚持下去，半年后的你会让自己刮目相看。',2:'你的成长瓶颈不在于执行力，而在于"破圈"的勇气。你已经在一个小范围内证明了自己，现在需要的是把视野打开——参加行业峰会、结交比你高一个段位的同行、主动接触资本和资源的圈子。你的稳健是一把双刃剑，它保护了你，也可能限制了你。试着每季度做一件让你"不太舒服"的事，比如公开演讲、跨区域考察，这些都将成为你成长的催化剂。',3:'你正处于从"优秀个人"到"优秀领导者"的转型期。你过去靠自己的能力和勤奋走到今天，但接下来你需要学会的是"通过他人拿到结果"。这意味着你要在选人、育人、授权上投入比以往更多的时间和精力。放手的初期可能会让你感到不安——你会觉得别人做得不如你好——但这是你必须跨越的门槛。记住：一个人走得快，一群人走得远。',4:'你的核心成长课题是"在速度与品质之间找到平衡"。你天生适合做增长，但康养行业的特殊性决定了它不是一个纯粹的"规模游戏"。你需要建立一套品质监控体系，确保在快速扩张中服务标准不下滑。同时，你也要开始关注自己的精力管理——高速增长对你个人的消耗是巨大的。学会在冲锋和休整之间找到节奏，你才能打持久战。',5:'你的成长已经超越了"能力提升"的范畴，进入了一个更深刻的阶段——"角色重塑"。你不再是简单地管理一家公司，你代表的是行业的高度。这意味着你需要花更多的时间在那些不紧急但极其重要的事情上：思考行业趋势、培养接班人、建立行业生态。同时，保持谦逊和对外界的敏感度——位高权重之后，最容易失去的就是真实的信息触角。'};
+  var relations={1:'在商业关系中，你是一个真诚而直接的人。你不会用华丽的辞藻包装自己，而是用行动证明价值。这种"说到做到"的风格，在康养这个信任成本极高的行业里，是你最宝贵的社交资产。不过，你的社交圈可能还比较窄——建议你有意识地拓展行业人脉，多参加行业协会活动，结识志同道合的创业伙伴。记住：康养是一个"抱团取暖"的行业，找到对的合作伙伴，能让你少走很多弯路。',2:'在商业关系中，你更习惯用实际成果而非口才建立信任。你是一个可靠、守信的合作伙伴——承诺了就会做到，交付了就会负责。这种品质在康养行业尤其珍贵，因为行业中的长期合作关系往往建立在信任之上。但你的短板在于"不善推销自己"——你可能做了十分，但只被看到了三分。学会适当地展示自己的成绩和规划，会让更多优质的合作伙伴主动找上门来。',3:'你是一个擅长做"资源连接器"的人。你能够把合适的人、资源、机会串联在一起，创造出更大的价值。你的商业关系网络正在从"点对点"升级为"网络化"——你不再只是一个节点，而是正在成为别人网络中的关键枢纽。但要警惕的是：随着你的影响力扩大，你需要更加谨慎地选择合作伙伴，一个错误的联姻可能让你付出高昂的代价。',4:'你在商业关系中是一个"引力场"。你的品牌影响力、行业资源和增长势头，天然地吸引着各种合作伙伴向你靠拢。你擅长在合作中发现共赢点，能用商业逻辑说服各方达成共识。然而，快速扩张中的合作关系往往建立在利益基础上——当风向转变时，这些关系能否经得住考验？你需要有意识地在利益关系之外，建立几个基于信任和价值观的深度伙伴关系。',5:'你在商业关系中扮演的是"规则制定者"的角色。合作伙伴与你合作的动机，不只是因为你能带来的直接价值，更因为你所代表的行业高度和生态位。但随之而来的挑战是：你需要比任何人都更谨慎地维护商业信誉——你的一举一动都在被行业放大审视。同时，你也需要在"竞合关系"中找到恰当的平衡——什么时候竞、什么时候合，需要更精细的判断。'};
+  var paths={1:'轻资产、低风险的小规模社区康养模式是你的最佳切入点。以"社区嵌入式养老服务"或"日间照料站"为核心，先在一个社区验证模式，再逐步复制。这个阶段最重要的是积累行业经验和社区资源，而不是追求规模。',2:'标准化运营+品牌化路线是你的成长方向。将当前项目打磨成可复制的样板，建立SOP体系，同时开始构建品牌识别度。适合以"社区康养中心"或"综合为老服务中心"为核心业态，深耕一个区域。',3:'多网点协同布局是你的核心竞争力。在主城区完成2-3个网点的协同布局，形成区域品牌势能。可以考虑向上游延伸（如适老化改造、康复辅具租赁），丰富收入结构，建立区域壁垒。',4:'资本化+生态化扩张是你的加速器。启动融资或引入战略合作，同时向上下游延伸产业链。可以考虑"康养+旅游""康养+教育"等跨界融合模式，用品牌溢价构建竞争护城河。',5:'产业标准化输出是你的终极战场。不仅做项目，更要输出标准——运营手册、培训体系、品牌授权。探索"康养+地产""康养+保险"等资本密集型模式，在更广阔的产业生态中布局。'};
+  var projMap={1:['社区日间照料站','居家养老上门服务','老年助餐点','健康管理咨询','适老化改造服务','老年文旅策划'],2:['社区综合为老服务中心','老年康复理疗馆','社区嵌入式养老院','老年营养配餐中心','康复辅具租赁站','老年兴趣培训中心'],3:['区域康养连锁品牌','医养结合护理院','老年康复医院','康养人才培训基地','智慧养老平台','康养产业园区'],4:['高端康养度假村','CCRC持续照料社区','康养+文旅综合体','康养产业投资基金','康养品牌特许经营','跨境康养服务'],5:['康养产业集团化运营','康养地产开发','康养+保险金融产品','康养行业标准制定','国际康养品牌引进','康养产业并购基金']};
+  var strMap={1:['实践操作','乐于挑战','灵活学习者','好奇心驱动','低成本试错','跨界视角'],2:['实践操作','快速排查问题','压力下冷静','社区信任构建','成本把控','耐力持久'],3:['独立思考者','系统化思维','乐于挑战','资源整合力','团队领导力','市场嗅觉'],4:['独立思考者','乐于挑战','品牌意识强','战略视野','快速决策','融资能力'],5:['独立思考者','实践操作','快速排查问题','压力下冷静','战略定力','生态思维']};
+  var warnMap={1:['不喜欢重复性工作','行业经验不足','资源网络薄弱','易受新奇事物干扰','过度乐观','财务意识薄弱'],2:['不喜欢重复性工作','社交主动性弱','沟通简略','规模化思维不足','品牌意识薄弱','对新趋势反应慢'],3:['难以全情投入','对理论耐心不足','快速扩张中易忽视细节','关键人才依赖','授权困难','资源分散'],4:['压力下易急于求成','社交主动性弱','易受新奇事物干扰','组织管理滞后','精力透支','团队忠诚度'],5:['难以全情投入','沟通简略','对理论耐心不足','组织熵增','信息茧房','继任者缺位']};
 
-// 六维渲染
-const dims=[{l:'投资力',v:iv,hi:'资本充裕',lo:'精打细算'},{l:'资源力',v:rs,hi:'资源丰富',lo:'自力更生'},{l:'运营力',v:op,hi:'体系成熟',lo:'灵活应变'},{l:'执行力',v:ex,hi:'雷厉风行',lo:'谋定后动'},{l:'市场力',v:mk,hi:'品牌驱动',lo:'口碑为王'},{l:'创新力',v:inn,hi:'锐意创新',lo:'务实深耕'}];
-document.getElementById('dimBars').innerHTML=dims.map((d,i)=>{
-    const isHigh=d.v>=50;
-    const barPct=isHigh?d.v:(100-d.v);
-    const labelTrait=isHigh?d.hi:d.lo; // 主导特质(出现在百分数后面)
-    const otherTrait=isHigh?d.lo:d.hi; // 另一个特质
-    const c=dimColors[i];
-    // 浮标在进度条上方，位置相对于进度条自身，极端值与进度条边缘对齐
-    const edgeLeft=barPct<=8,edgeRight=barPct>=92;
-    const posStyle=edgeLeft?'left:0;transform:none;':edgeRight?'left:100%;transform:translateX(-100%);':`left:${barPct}%;transform:translateX(-50%);`;
-    return `<div style="margin-bottom:28px;cursor:pointer;" onclick="showDimPopup('${d.l}',${d.v},'${d.hi}','${d.lo}')">
-        <div style="display:flex;align-items:center;gap:0;">
-            <div style="min-width:62px;padding-right:8px;display:flex;align-items:center;justify-content:flex-end;"><div class="dim-left">${labelTrait}</div></div>
-            <div class="dim-bar-wrap" style="position:relative;overflow:visible;"><div style="position:absolute;bottom:100%;margin-bottom:2px;${posStyle}white-space:nowrap;color:${c};font-size:13px;font-weight:700;">${barPct}% ${labelTrait}</div><div class="dfill c${i+1}" style="width:0%;"></div></div>
-            <div style="min-width:62px;padding-left:8px;display:flex;align-items:center;"><div class="dim-right">${otherTrait}</div></div>
-        </div>
-    </div>`;
-}).join('');
-setTimeout(()=>{document.querySelectorAll('.dim-bar-wrap .dfill').forEach((b,i)=>{const isHigh=dims[i].v>=50;b.style.width=(isHigh?dims[i].v:(100-dims[i].v))+'%';});},300);
+  document.getElementById('fullTrait').textContent=traits[level];
+  document.getElementById('fullStyle').textContent=styles[level];
+  document.getElementById('fullGrowth').textContent=growth[level];
+  document.getElementById('fullRelation').textContent=relations[level];
+  document.getElementById('fullPath').textContent=paths[level];
 
-// 动态定制：根据最高维度和最低维度插入针对性分析
-const dimScores={投资力:iv,资源力:rs,运营力:op,执行力:ex,市场力:mk,创新力:inn};
-const sorted=Object.entries(dimScores).sort((a,b)=>b[1]-a[1]);
-const topDim=sorted[0][0], lowDim=sorted[5][0];
-const dynamicStr={投资力:{t:'资金效率意识',d:'你懂得如何用有限的资源创造最大的价值，每一分钱都花在刀刃上。'},资源力:{t:'人脉复利思维',d:'你明白一个关系可以裂变出一个网络，持续投入社交资本会带来指数回报。'},运营力:{t:'流程优化本能',d:'你天生就会把复杂的事情简单化、标准化，让团队运转更高效。'},执行力:{t:'行动导向',d:'你不是空想家——想到就做，做了就调整，这种速度感让你始终快人一步。'},市场力:{t:'用户共情力',d:'你能站在客户角度思考，真正理解他们的需求和痛点，而非自说自话。'},创新力:{t:'破局思维',d:'当别人在存量市场内卷时，你已经在思考如何创造新的游戏规则。'}};
-const dynamicWarn={投资力:{t:'资金焦虑',d:'资金有限时容易陷入"省钱思维"，忽略了必要的战略性投入。'},资源力:{t:'单打独斗',d:'资源有限让你习惯靠自己，但康养是生态战，不是个人战。'},运营力:{t:'框架缺失',d:'缺乏体系化的运营框架，容易陷入"救火式管理"的循环。'},执行力:{t:'行动过快',d:'速度是优势也是陷阱——推进太快可能跳过关键的风险评估环节。'},市场力:{t:'过度低调',d:'不善于主动展示和营销自己，可能让好产品被埋没在信息噪音中。'},创新力:{t:'务实过度',d:'过于务实有时会让你错过那些看似冒险但可能改变格局的机会。'}};
+  var dims=[{l:'投资力',v:iv},{l:'资源力',v:rs},{l:'运营力',v:op},{l:'执行力',v:ex},{l:'市场力',v:mk},{l:'创新力',v:inn}];
+  var dimColors=['#cc6b6b','#bdb04d','#5cb85c','#4dabab','#5c5ccc','#b84db8'];
+  document.getElementById('fullDimBars').innerHTML=dims.map(function(d,i){
+    var c=dimColors[i];
+    return '<div style="margin-bottom:14px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;">'+d.l+'</span><span style="font-size:13px;font-weight:700;color:'+c+';">'+d.v+'%</span></div><div style="height:18px;background:var(--bar-bg);border-radius:9px;overflow:hidden;"><div style="height:100%;width:'+d.v+'%;background:'+c+';border-radius:9px;"></div></div></div>';
+  }).join('');
 
-let strItems=strMap[level].slice(0,5);
-let warnItems=warnMap[level].slice(0,5);
-if(dynamicStr[topDim]) strItems.push(dynamicStr[topDim]);
-else strItems.push(strMap[level][5]);
-if(dynamicWarn[lowDim]) warnItems.push(dynamicWarn[lowDim]);
-else warnItems.push(warnMap[level][5]);
+  document.getElementById('fullStr').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;">'+strMap[level].map(function(s){return '<div><div style="font-size:14px;font-weight:600;color:var(--text);">'+s+'</div></div>';}).join('')+'</div>';
+  document.getElementById('fullWarn').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;">'+warnMap[level].map(function(s){return '<div><div style="font-size:14px;font-weight:600;color:var(--text);">'+s+'</div></div>';}).join('')+'</div>';
+  document.getElementById('fullProjects').innerHTML=projMap[level].map(function(p){return '<span style="display:inline-block;padding:5px 12px;margin:3px;border-radius:8px;font-size:11px;background:#edf6f0;color:#4a7a5e;">'+p+'</span>';}).join('');
 
-document.getElementById('rStr').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;">'+strItems.map(s=>`<div class="trait-item"><div class="trait-title">${s.t}</div><div class="trait-desc">${s.d}</div></div>`).join('')+'</div>';
-document.getElementById('rWarn').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;">'+warnItems.map(s=>`<div class="trait-item"><div class="trait-title">${s.t}</div><div class="trait-desc">${s.d}</div></div>`).join('')+'</div>';
-document.getElementById('rPath').textContent=paths[level];
-document.getElementById('rProjects').innerHTML=projects[level].map(p=>`<span class="fit-tag${p.l?' locked':''}">${p.l?'🔒 ':''}${p.t}</span>`).join('');
-document.getElementById('rStyle').textContent=styles[level];
-document.getElementById('rGrowth').textContent=growth[level];
-document.getElementById('rRelation').textContent=relations[level];
-window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('fullPhase').classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showDimPopup(l,v,hi,lo){
-    const d=dimDetail[l],high=v>=50,bg=document.createElement('div');bg.className='dim-modal-bg';
-    bg.innerHTML=`<div class="dim-modal"><div class="dm-title">${l} ${v}% — ${high?hi:lo}</div><div class="dm-desc">${high?d.hiDesc:d.loDesc}</div><div class="dm-tip">${high?d.hiTip:d.loTip}</div><button class="dm-close" onclick="this.closest('.dim-modal-bg').remove()">知道了</button></div>`;
-    bg.addEventListener('click',function(e){if(e.target===bg)bg.remove();});document.body.appendChild(bg);
-}
-function exitPreview(){isPreview=false;document.getElementById('resPhase').classList.remove('on');document.getElementById('welcomePhase').classList.add('on');for(const k in ans)delete ans[k];qi=0;renderQ();window.scrollTo({top:0,behavior:'smooth'});}
-function showFormPopup(){const bg=document.createElement('div');bg.className='dim-modal-bg';bg.innerHTML=`<div class="dim-modal"><div class="dm-title">领取详细落地方案</div><div style="margin-bottom:12px;"><input id="formName" placeholder="姓名" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;"><input id="formPhone" type="tel" placeholder="手机号（建议微信注册手机号，防止邮箱收不到落地方案）" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:8px;"><input id="formEmail" type="email" placeholder="邮箱（接收详细报告）" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;"></div><button class="dm-close" onclick="submitForm(this)">提交，领取方案</button></div>`;bg.addEventListener('click',function(e){if(e.target===bg)bg.remove();});document.body.appendChild(bg);}
-// 飞书 webhook — 替换为你的 webhook 地址
-const FEISHU_WEBHOOK='https://open.feishu.cn/open-apis/bot/v2/hook/bde2a230-48d5-4383-b26e-1d6899943971';
-function submitForm(btn){const n=document.getElementById('formName').value.trim();const p=document.getElementById('formPhone').value.trim();const e=document.getElementById('formEmail').value.trim();if(!n){alert('请输入姓名');return;}if(!p||!/^1[3-9]\d{9}$/.test(p)){alert('请输入正确的手机号');return;}if(!e||!e.includes('@')){alert('请输入正确的邮箱');return;}const record={name:n,phone:p,email:e,level:window._lastLevel||'',city:ans.city||'',time:new Date().toLocaleString()};let data=JSON.parse(localStorage.getItem('kangyang_leads')||'[]');data.push(record);localStorage.setItem('kangyang_leads',JSON.stringify(data));if(FEISHU_WEBHOOK){fetch(FEISHU_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({msg_type:'interactive',card:{header:{title:{content:'🔔 新线索：'+n,tag:'plain_text'},template:'green'},elements:[{tag:'div',text:{tag:'lark_md',content:`**姓名：**${n}\n**手机：**${p}\n**邮箱：**${e}\n**类型：**${record.level}\n**城市：**${record.city}\n**时间：**${record.time}`}},{tag:'hr'},{tag:'note',elements:[{tag:'plain_text',content:'康养项目评估系统'}]}]}})}).catch(()=>{});}btn.closest('.dim-modal-bg').remove();alert('已收到！顾问将在24小时内与你联系\n方案将发送至 '+e);}
-
-// 管理后台 (访问 ?admin 进入)
-(function(){if(window.location.search.includes('admin')){document.getElementById('quizPhase').classList.remove('on');document.getElementById('resPhase').classList.add('on');document.getElementById('charSvg').innerHTML='<div style="font-size:40px;padding:20px;">📊</div>';document.getElementById('rName').textContent='线索管理后台';document.getElementById('rSubtitle').textContent='';document.getElementById('rBadges').innerHTML='';document.getElementById('rTrait').textContent='所有已收集的线索数据。';document.querySelectorAll('.sec').forEach(s=>s.style.display='none');document.querySelector('.r-hero+.r-quote')&&(document.querySelector('.r-hero+.r-quote').style.display='none');document.querySelector('.cta-btns')&&(document.querySelector('.cta-btns').parentElement.style.display='none');document.querySelector('.qr-bot')&&(document.querySelector('.qr-bot').style.display='none');const leads=JSON.parse(localStorage.getItem('kangyang_leads')||'[]');const dimBar=document.getElementById('dimBars');if(!leads.length){dimBar.innerHTML='<p style="color:var(--sub);text-align:center;padding:20px;">暂无线索</p>';}else{const csv='姓名,手机号,邮箱,创业者类型,城市,提交时间\n'+leads.map(d=>`${d.name},${d.phone},${d.email},${d.level},${d.city},${d.time}`).join('\n');dimBar.innerHTML=`<div style="margin-bottom:12px;display:flex;gap:8px;"><button class="cta-btn cta-dark" style="flex:1;" onclick="navigator.clipboard.writeText(\`${csv.replace(/`/g,'\\\\`')}\`).then(()=>alert('已复制'+${leads.length}+'条到剪贴板')).catch(()=>alert('复制失败'))">📋 复制全部(${leads.length}条)</button><button class="cta-btn cta-outline" style="flex:1;" onclick="if(confirm('确定清空所有线索？')){localStorage.removeItem('kangyang_leads');location.reload();}">🗑 清空</button></div><table style="width:100%;font-size:12px;border-collapse:collapse;"><tr style="background:var(--bar-bg);">${['姓名','手机号','邮箱','类型','城市','时间'].map(h=>'<th style="padding:8px 6px;text-align:left;">'+h+'</th>').join('')}</tr>${leads.map(d=>'<tr style="border-bottom:1px solid var(--border);">'+[d.name,d.phone,d.email,d.level,d.city,d.time].map(v=>'<td style="padding:8px 6px;">'+v+'</td>').join('')+'</tr>').join('')}</table>`;}// 二维码生成器
-const qrSec=document.createElement('div');qrSec.className='sec';qrSec.innerHTML='<h3>页面二维码</h3><div style="text-align:center;"><input id="qrUrl" placeholder="输入页面URL" style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;" value="'+window.location.origin+window.location.pathname+'"><button class="cta-btn cta-dark" style="width:100%;margin-bottom:10px;" onclick="document.getElementById(\'qrImg\').src=\'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=\'+encodeURIComponent(document.getElementById(\'qrUrl\').value)">生成二维码</button><img id="qrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data='+encodeURIComponent(window.location.origin+window.location.pathname)+'" style="max-width:260px;border-radius:10px;" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><rect width=%22200%22 height=%22200%22 fill=%22%23f0f0f0%22/><text x=%22100%22 y=%22100%22 text-anchor=%22middle%22 font-size=%2214%22 fill=%22%23999%22>二维码生成失败</text></svg>\'"><p style="font-size:11px;color:var(--sub);margin-top:8px;">右键保存二维码图片，放入服务号</p></div>';document.getElementById('resPhase').appendChild(qrSec);window.scrollTo({top:0,behavior:'smooth'});}})();
-
-
-window.startQuiz=function(){
-  // 清空上次答题的所有状态
-  for(var k in ans)delete ans[k];
-  qi=0;isPreview=false;
-  // 隐藏其他 phase，只保留 quiz
+// ========== 入口 ==========
+window.startQuiz = function(){
+  // 检查是否已解锁
+  if(isUnlocked()){
+    loadFullQuiz();
+    return;
+  }
+  // 重置精简版状态
+  ans_lite={};qi_lite=0;
   document.getElementById('welcomePhase').classList.remove('on');
-  document.getElementById('loadPhase').classList.remove('on');
-  document.getElementById('resPhase').classList.remove('on');
   document.getElementById('quizPhase').classList.add('on');
-  if(typeof renderQ==='function')renderQ();
+  renderQLite();
 };
-(function(){const urlP=new URLSearchParams(window.location.search),hashP=new URLSearchParams((window.location.hash||'').replace('#',''));const preview=parseInt(urlP.get('preview'))||parseInt(hashP.get('preview'));if(preview&&preview>=1&&preview<=5){isPreview=true;for(var k in ans)delete ans[k];document.getElementById('welcomePhase').classList.remove('on');document.getElementById('quizPhase').classList.remove('on');document.getElementById('loadPhase').classList.remove('on');Q.forEach(q=>{if(q.type==='opt'){const mx=(q.o||[]).length;const v=preview+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city='杭州';ans.gender=1;ans.age=2;ans.job=3;showResult();}else{renderQ();}
-if(window.location.search.includes('debug')){const bar=document.createElement('div');bar.className='preview-bar';bar.innerHTML='<span>预览:</span>'+[1,2,3,4,5].map(l=>`<button onclick="isPreview=true;for(var k in ans)delete ans[k];document.getElementById(\'quizPhase\').classList.remove(\'on\');document.getElementById(\'loadPhase\').classList.remove(\'on\');Q.forEach(q=>{if(q.type===\'opt\'){const mx=(q.o||[]).length;const v=`+l+`+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city=\'杭州\';ans.gender=1;ans.age=2;ans.job=3;showResult();">N${l}</button>`).join('');document.body.appendChild(bar);}})();
+
+// 页面加载
+(function(){
+  if(isUnlocked()){
+    // 已解锁用户：提供选项
+    // 直接进完整版，隐藏欢迎页按钮改为"开始完整评估"
+  }
+  // 初始显示欢迎页
+})();
 </script>
 </body>
 </html>
