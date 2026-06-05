@@ -80,7 +80,7 @@ body{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;b
     <div style="font-size:28px;font-weight:800;color:var(--text);letter-spacing:1px;margin-bottom:8px;">康养项目适配指数评估</div>
     <div style="font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:28px;">3 分钟 · 50 道题 · 六维分析<br>发现你的康养创业者类型<br>获取专属《康养项目可行性报告》</div>
     <button class="btn btn-go" onclick="startQuiz()" style="max-width:260px;margin:0 auto;font-size:17px;padding:16px;">开始免费评估 →</button>
-    <div style="margin-top:32px;font-size:11px;color:var(--light);">已有 10,000+ 康养创业者完成测评<br><span style="font-size:10px;color:#ccc;">v2.2</span></div>
+    <div style="margin-top:32px;font-size:11px;color:var(--light);">已有 10,000+ 康养创业者完成测评<br><span style="font-size:10px;color:#ccc;">v2.3</span></div>
 </div>
 <div class="phase" id="quizPhase"><div class="topbar"><span class="step-num" id="stepNum">1/50</span><div class="bar-outer"><div class="bar-inner" id="stepBar" style="width:0%"></div></div><span class="step-pct" id="stepPct">0%</span></div><div class="quiz-body" id="quizBody"></div></div>
 <div class="phase" id="loadPhase"><div class="loading"><div class="spinner"></div><p id="loadText">正在分析...</p></div></div>
@@ -110,7 +110,7 @@ function selOpt(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.class
 function nextQ(){const q=Q[qi];if(q.type==='input'){const v=document.getElementById('inp').value.trim();if(!v){alert('请填写后再继续');return;}ans[q.id]=v;}else{if(!ans[q.id]){alert('请选择一个选项');return;}}qi++;renderQ();}
 function prevQ(){if(qi>0){qi--;renderQ();}}
 function finish(){document.getElementById('quizPhase').classList.remove('on');document.getElementById('loadPhase').classList.add('on');const texts=['正在分析六维数据...','正在匹配行业模型...','正在生成人物特征...','正在规划创业道路...','报告已生成'];let i=0;const el=document.getElementById('loadText');const t=setInterval(()=>{if(i<texts.length){el.textContent=texts[i];i++;}},600);setTimeout(()=>{clearInterval(t);document.getElementById('loadPhase').classList.remove('on');showResult();},3300);}
-function dimScore(p,c){let s=0,n=0;for(let i=1;i<=c;i++){const v=ans[p+i];if(v){s+=v;n++;}}if(n===0)return 0;const q0=Q.find(q=>q.id===p+'1');return Math.round((s/(n*(q0?q0.o.length:5)))*100);}
+function dimScore(p,c){let s=0,n=0;for(let i=1;i<=c;i++){const v=ans[p+i];if(!v)continue;const qi=Q.find(function(q){return q.id===p+i;});const mx=qi?qi.o.length:5;s+=v/mx;n++;}if(n===0)return 0;return Math.round((s/n)*100);}
 
 // 文案
 const traits={1:'尽管康养产业对你来说还是一片尚待探索的新天地，然而，正是这份"跨界而来"的新鲜视角，让你不会被行业旧规所束缚。你对新知识的渴望如同海绵吸水——每一场行业交流、每一次实地走访，都能让你迅速建立起自己的认知框架。不过，当前阶段你如同一块未经雕琢的璞玉：热情有余而经验不足。当面对那些需要深厚行业积淀才能做出的关键决策时，你有时会感到如履薄冰。但正是这份"初生牛犊"的勇气，让你敢于尝试那些成熟玩家不敢轻易触碰的轻资产创新模式。你起步虽晚，奔跑的速度却可能远超他人。',2:'你在康养创业的道路上，走的是一条稳扎稳打的务实之路。你深知康养的本质不是资本的狂欢，而是信任的积累——每一个社区关系的维护、每一位客户口碑的建立，都是你比别人走得更远的底气。尽管你并非行业中最高调的存在，但你拥有一种稀缺的能力：在危机时刻保持冷静，在繁琐日常中坚持标准。然而，你的稳健有时也意味着你不太愿意冒险尝试新路径，面对需要快速决策的机遇时，你可能会因过度审慎而错失良机。但无论如何，在康养这个"慢行业"里，你的风格恰恰是最耐得住时间考验的。',3:'你站在一个令人羡慕的位置——既有扎实的行业根基，又有扩张的野心和能力。你不再满足于经营好一家店，你的目光已经投向了一个区域的版图。在团队面前，你是那个能在混乱中建立秩序的人；在竞争者面前，你是那个不声不响却步步为营的对手。然而，随着版图的扩展，你面临的最大挑战不再是"能不能做"，而是"能不能做好每一个"。管理半径的扩大意味着你无法再事必躬亲——如何放手信任团队、如何在标准化与灵活性之间找到平衡，是你接下来必须跨越的坎。',4:'你身上有一种让投资人无法忽视的特质——你不仅有想法，更有将想法快速落地的执行力。在康养这个以"慢"著称的行业里，你是一匹不容忽视的快马。你对品牌的价值有着天生的敏感，你深知在消费者心中占据一个清晰的位置比什么都重要。然而，加速度带来的惯性也让你时刻面临"刹不住车"的风险——当多个项目同时推进时，你的注意力和资源可能被过度稀释。你的挑战从来不是"能不能跑起来"，而是"跑得快的同时能不能跑得稳"。',5:'你是康养产业金字塔尖那为数不多的一群人——你们不再只是在做一门生意，而是在定义一个行业的走向。你的视野早已超越了单店盈亏，你看到的是产业链、是生态圈、是可复制的标准。在动荡的市场环境和复杂的政策博弈中，你是那个能够稳住军心的人。然而，高处不胜寒——当你越来越习惯于用战略思维俯瞰全局时，也越容易忽略那些最基础的、最琐碎的日常。保持对一线的感知力、维持组织的创新活力，是你在这个段位最需要警惕的事情。'};
@@ -127,11 +127,15 @@ const dimColors=['#cc6b6b','#bdb04d','#5cb85c','#4dabab','#5c5ccc','#b84db8'];
 const dimDetail={投资力:{hiDesc:'资金充沛，可做更大规模布局。考虑中高端康养模式，用资本建品牌壁垒。',loDesc:'资金偏紧，倒逼精打细算。轻资产模式最优——用智慧而非金钱驱动增长。',hiTip:'建议尝试中型社区康养中心，建立标准化运营模型',loTip:'建议从社区嵌入式服务起步，用最小成本验证模式'},资源力:{hiDesc:'人脉广渠道多，可快速调动社区、医疗、政府资源协同作战。',loDesc:'资源有限，练就独立自主。不依赖外部，靠自己建立信任。',hiTip:'建议启动多资源协同项目，如医养结合中心',loTip:'建议从拜访社区开始，逐一建立关系'},运营力:{hiDesc:'成熟运营体系，项目可复制性强——连锁扩张是天然优势。',loDesc:'缺乏成熟框架，但无条条框框——灵活应变是初创期最大竞争力。',hiTip:'建议梳理SOP手册，为多店复制做好准备',loTip:'建议边做边总结，在实践中形成运营方法'},执行力:{hiDesc:'场地团队证照顺畅，快速落地能力——先发优势是核心武器。',loDesc:'推进不快，但每个决策都深思熟虑——慢，但每一步都稳当。',hiTip:'建议利用先发优势抢占区域，快速建立品牌认知',loTip:'建议保持稳健节奏，确保每个环节做细'},市场力:{hiDesc:'擅长品牌营销，获客渠道丰富——规模化获客是最大优势。',loDesc:'不擅花哨营销，但用服务和口碑说话——获客虽慢但粘性极高。',hiTip:'建议加大品牌投入，线上线下多渠道获客',loTip:'建议专注服务品质，用口碑裂变替代广告投放'},创新力:{hiDesc:'对新模式持开放态度，敢于尝试——创新是最大差异化武器。',loDesc:'对花哨创新不感冒，但务实是康养最稀缺品质——服务做透比创新重要。',hiTip:'建议引入科技和跨界元素，打造差异化竞争力',loTip:'建议聚焦核心服务，深耕一个领域即护城河'}};
 
 function showResult(){
+// 立即快照当前答题数据，防止后续操作污染
+var _ans={};for(var k in ans)_ans[k]=ans[k];
+var _calc={iv:dimScore('iv',8),rs:dimScore('rs',10),op:dimScore('op',10),ex:dimScore('ex',9),mk:dimScore('mk',10),inn:dimScore('in',8)};
+var _gender=_ans.gender||1;
 document.getElementById('resPhase').classList.add('on');document.getElementById('previewBack').style.display=isPreview?'flex':'none';
-const iv=dimScore('iv',8),rs=dimScore('rs',10),op=dimScore('op',10),ex=dimScore('ex',9),mk=dimScore('mk',10),inn=dimScore('in',8);
+var iv=_calc.iv,rs=_calc.rs,op=_calc.op,ex=_calc.ex,mk=_calc.mk,inn=_calc.inn;
 const total=Math.round(iv*0.2+rs*0.2+op*0.2+ex*0.15+mk*0.15+inn*0.1);
 let name,sub,level;if(total<25){name='潜力探索者';sub='Potential Explorer';level=1;}else if(total<44){name='稳健筑基者';sub='Steady Builder';level=2;}else if(total<62){name='区域运营家';sub='Regional Operator';level=3;}else if(total<82){name='增长加速者';sub='Growth Accelerator';level=4;}else{name='产业操盘手';sub='Industry Master';level=5;}
-document.getElementById('charSvg').innerHTML=`<img src="${getAvatar(ans.gender||1,level)}" alt="avatar">`;
+document.getElementById('charSvg').innerHTML=`<img src="${getAvatar(_gender,level)}" alt="avatar">`;
 document.getElementById('rName').textContent=name;document.getElementById('rSubtitle').textContent=sub;window._lastLevel=name;
 const badges={1:[{t:'康养新锐',c:'blue'},{t:'轻资产起步',c:'green'}],2:[{t:'实干派',c:'green'},{t:'社区根基',c:'blue'}],3:[{t:'区域操盘手',c:'gold'},{t:'资源整合者',c:'blue'},{t:'规模化基因',c:'green'}],4:[{t:'高成长型',c:'purple'},{t:'多线作战',c:'blue'},{t:'品牌驱动',c:'gold'}],5:[{t:'产业领航者',c:'gold'},{t:'全能操盘',c:'purple'},{t:'生态构建',c:'blue'},{t:'资本级',c:'gold'}]};
 document.getElementById('rBadges').innerHTML=badges[level].map(b=>`<span class="r-badge ${b.c}">${b.t}</span>`).join('');
@@ -210,7 +214,7 @@ window.startQuiz=function(){
   if(typeof renderQ==='function')renderQ();
 };
 (function(){const urlP=new URLSearchParams(window.location.search),hashP=new URLSearchParams((window.location.hash||'').replace('#',''));const preview=parseInt(urlP.get('preview'))||parseInt(hashP.get('preview'));if(preview&&preview>=1&&preview<=5){isPreview=true;for(var k in ans)delete ans[k];document.getElementById('welcomePhase').classList.remove('on');document.getElementById('quizPhase').classList.remove('on');document.getElementById('loadPhase').classList.remove('on');Q.forEach(q=>{if(q.type==='opt'){const mx=(q.o||[]).length;const v=preview+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city='杭州';ans.gender=1;ans.age=2;ans.job=3;showResult();}else{renderQ();}
-const bar=document.createElement('div');bar.className='preview-bar';bar.innerHTML='<span>预览:</span>'+[1,2,3,4,5].map(l=>`<button onclick="isPreview=true;for(var k in ans)delete ans[k];document.getElementById(\'quizPhase\').classList.remove(\'on\');document.getElementById(\'loadPhase\').classList.remove(\'on\');Q.forEach(q=>{if(q.type===\'opt\'){const mx=(q.o||[]).length;const v=`+l+`+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city=\'杭州\';ans.gender=1;ans.age=2;ans.job=3;showResult();">N${l}</button>`).join('');document.body.appendChild(bar);})();
+if(window.location.search.includes('debug')){const bar=document.createElement('div');bar.className='preview-bar';bar.innerHTML='<span>预览:</span>'+[1,2,3,4,5].map(l=>`<button onclick="isPreview=true;for(var k in ans)delete ans[k];document.getElementById(\'quizPhase\').classList.remove(\'on\');document.getElementById(\'loadPhase\').classList.remove(\'on\');Q.forEach(q=>{if(q.type===\'opt\'){const mx=(q.o||[]).length;const v=`+l+`+(Math.floor(Math.random()*3)-1);ans[q.id]=Math.max(1,Math.min(mx,v));}});ans.city=\'杭州\';ans.gender=1;ans.age=2;ans.job=3;showResult();">N${l}</button>`).join('');document.body.appendChild(bar);}})();
 </script>
 </body>
 </html>
